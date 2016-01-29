@@ -13,7 +13,16 @@
 		8E58EA1A1C2A8EE0002BD8E6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E58EA181C2A8EE0002BD8E6 /* Main.storyboard */; };
 		8E58EA1C1C2A8EE0002BD8E6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8E58EA1B1C2A8EE0002BD8E6 /* Assets.xcassets */; };
 		8E58EA1F1C2A8EE0002BD8E6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E58EA1D1C2A8EE0002BD8E6 /* LaunchScreen.storyboard */; };
-		8E58EA2C1C2A96D0002BD8E6 /* KRRBFNN.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E58EA2B1C2A96D0002BD8E6 /* KRRBFNN.m */; settings = {ASSET_TAGS = (); }; };
+		8E58EA2C1C2A96D0002BD8E6 /* KRRBFNN.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E58EA2B1C2A96D0002BD8E6 /* KRRBFNN.m */; };
+		8E58EA301C2CFA56002BD8E6 /* KRRBFCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E58EA2F1C2CFA56002BD8E6 /* KRRBFCenter.m */; };
+		8E58EA331C2CFA75002BD8E6 /* KRRBFPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E58EA321C2CFA75002BD8E6 /* KRRBFPattern.m */; };
+		8E58EA361C2CFA9D002BD8E6 /* KRRBFOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E58EA351C2CFA9D002BD8E6 /* KRRBFOutput.m */; };
+		8E58EA391C2CFAB2002BD8E6 /* KRRBFHiddenLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E58EA381C2CFAB2002BD8E6 /* KRRBFHiddenLayer.m */; };
+		8E58EA3D1C2CFBA1002BD8E6 /* KRRBFOutputLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E58EA3C1C2CFBA1002BD8E6 /* KRRBFOutputLayer.m */; };
+		8EFD20DB1C5BA07F00C3B2B8 /* KRRBFCenterChoose.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EFD20DA1C5BA07F00C3B2B8 /* KRRBFCenterChoose.m */; };
+		8EFD20DE1C5BA09F00C3B2B8 /* KRRBFActiviation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EFD20DD1C5BA09F00C3B2B8 /* KRRBFActiviation.m */; };
+		8EFD20E31C5BA31E00C3B2B8 /* KRRBFOLS.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EFD20E21C5BA31E00C3B2B8 /* KRRBFOLS.m */; };
+		8EFD20E61C5BABFB00C3B2B8 /* KRRBFCandidateCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EFD20E51C5BABFB00C3B2B8 /* KRRBFCandidateCenter.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +38,24 @@
 		8E58EA201C2A8EE0002BD8E6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8E58EA2A1C2A96D0002BD8E6 /* KRRBFNN.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KRRBFNN.h; sourceTree = "<group>"; };
 		8E58EA2B1C2A96D0002BD8E6 /* KRRBFNN.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KRRBFNN.m; sourceTree = "<group>"; };
+		8E58EA2E1C2CFA56002BD8E6 /* KRRBFCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KRRBFCenter.h; sourceTree = "<group>"; };
+		8E58EA2F1C2CFA56002BD8E6 /* KRRBFCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KRRBFCenter.m; sourceTree = "<group>"; };
+		8E58EA311C2CFA75002BD8E6 /* KRRBFPattern.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KRRBFPattern.h; sourceTree = "<group>"; };
+		8E58EA321C2CFA75002BD8E6 /* KRRBFPattern.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KRRBFPattern.m; sourceTree = "<group>"; };
+		8E58EA341C2CFA9D002BD8E6 /* KRRBFOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KRRBFOutput.h; sourceTree = "<group>"; };
+		8E58EA351C2CFA9D002BD8E6 /* KRRBFOutput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KRRBFOutput.m; sourceTree = "<group>"; };
+		8E58EA371C2CFAB2002BD8E6 /* KRRBFHiddenLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KRRBFHiddenLayer.h; sourceTree = "<group>"; };
+		8E58EA381C2CFAB2002BD8E6 /* KRRBFHiddenLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KRRBFHiddenLayer.m; sourceTree = "<group>"; };
+		8E58EA3B1C2CFBA1002BD8E6 /* KRRBFOutputLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KRRBFOutputLayer.h; sourceTree = "<group>"; };
+		8E58EA3C1C2CFBA1002BD8E6 /* KRRBFOutputLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KRRBFOutputLayer.m; sourceTree = "<group>"; };
+		8EFD20D91C5BA07F00C3B2B8 /* KRRBFCenterChoose.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KRRBFCenterChoose.h; sourceTree = "<group>"; };
+		8EFD20DA1C5BA07F00C3B2B8 /* KRRBFCenterChoose.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KRRBFCenterChoose.m; sourceTree = "<group>"; };
+		8EFD20DC1C5BA09F00C3B2B8 /* KRRBFActiviation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KRRBFActiviation.h; sourceTree = "<group>"; };
+		8EFD20DD1C5BA09F00C3B2B8 /* KRRBFActiviation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KRRBFActiviation.m; sourceTree = "<group>"; };
+		8EFD20E11C5BA31E00C3B2B8 /* KRRBFOLS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KRRBFOLS.h; sourceTree = "<group>"; };
+		8EFD20E21C5BA31E00C3B2B8 /* KRRBFOLS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KRRBFOLS.m; sourceTree = "<group>"; };
+		8EFD20E41C5BABFB00C3B2B8 /* KRRBFCandidateCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KRRBFCandidateCenter.h; sourceTree = "<group>"; };
+		8EFD20E51C5BABFB00C3B2B8 /* KRRBFCandidateCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KRRBFCandidateCenter.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,9 +113,13 @@
 		8E58EA261C2A96C0002BD8E6 /* ML */ = {
 			isa = PBXGroup;
 			children = (
-				8E58EA271C2A96C0002BD8E6 /* KRRBFHiddenLayer */,
-				8E58EA281C2A96C0002BD8E6 /* KRRBFOutput */,
+				8EFD20D71C5BA07F00C3B2B8 /* KRRBFActiviation */,
+				8EFD20D81C5BA07F00C3B2B8 /* KRRBFCenterChoose */,
 				8E58EA291C2A96C0002BD8E6 /* KRRBFPattern */,
+				8E58EA2D1C2CF99D002BD8E6 /* KRRBFCenter */,
+				8E58EA281C2A96C0002BD8E6 /* KRRBFOutput */,
+				8E58EA271C2A96C0002BD8E6 /* KRRBFHiddenLayer */,
+				8E58EA3A1C2CFB7A002BD8E6 /* KRRBFOutputLayer */,
 				8E58EA2A1C2A96D0002BD8E6 /* KRRBFNN.h */,
 				8E58EA2B1C2A96D0002BD8E6 /* KRRBFNN.m */,
 			);
@@ -98,6 +129,8 @@
 		8E58EA271C2A96C0002BD8E6 /* KRRBFHiddenLayer */ = {
 			isa = PBXGroup;
 			children = (
+				8E58EA371C2CFAB2002BD8E6 /* KRRBFHiddenLayer.h */,
+				8E58EA381C2CFAB2002BD8E6 /* KRRBFHiddenLayer.m */,
 			);
 			path = KRRBFHiddenLayer;
 			sourceTree = "<group>";
@@ -105,6 +138,8 @@
 		8E58EA281C2A96C0002BD8E6 /* KRRBFOutput */ = {
 			isa = PBXGroup;
 			children = (
+				8E58EA341C2CFA9D002BD8E6 /* KRRBFOutput.h */,
+				8E58EA351C2CFA9D002BD8E6 /* KRRBFOutput.m */,
 			);
 			path = KRRBFOutput;
 			sourceTree = "<group>";
@@ -112,8 +147,66 @@
 		8E58EA291C2A96C0002BD8E6 /* KRRBFPattern */ = {
 			isa = PBXGroup;
 			children = (
+				8E58EA311C2CFA75002BD8E6 /* KRRBFPattern.h */,
+				8E58EA321C2CFA75002BD8E6 /* KRRBFPattern.m */,
 			);
 			path = KRRBFPattern;
+			sourceTree = "<group>";
+		};
+		8E58EA2D1C2CF99D002BD8E6 /* KRRBFCenter */ = {
+			isa = PBXGroup;
+			children = (
+				8E58EA2E1C2CFA56002BD8E6 /* KRRBFCenter.h */,
+				8E58EA2F1C2CFA56002BD8E6 /* KRRBFCenter.m */,
+			);
+			path = KRRBFCenter;
+			sourceTree = "<group>";
+		};
+		8E58EA3A1C2CFB7A002BD8E6 /* KRRBFOutputLayer */ = {
+			isa = PBXGroup;
+			children = (
+				8E58EA3B1C2CFBA1002BD8E6 /* KRRBFOutputLayer.h */,
+				8E58EA3C1C2CFBA1002BD8E6 /* KRRBFOutputLayer.m */,
+			);
+			path = KRRBFOutputLayer;
+			sourceTree = "<group>";
+		};
+		8EFD20D71C5BA07F00C3B2B8 /* KRRBFActiviation */ = {
+			isa = PBXGroup;
+			children = (
+				8EFD20DC1C5BA09F00C3B2B8 /* KRRBFActiviation.h */,
+				8EFD20DD1C5BA09F00C3B2B8 /* KRRBFActiviation.m */,
+			);
+			path = KRRBFActiviation;
+			sourceTree = "<group>";
+		};
+		8EFD20D81C5BA07F00C3B2B8 /* KRRBFCenterChoose */ = {
+			isa = PBXGroup;
+			children = (
+				8EFD20DF1C5BA31500C3B2B8 /* KRRBFOLS */,
+				8EFD20E01C5BA31500C3B2B8 /* KRRBFRandom */,
+				8EFD20D91C5BA07F00C3B2B8 /* KRRBFCenterChoose.h */,
+				8EFD20DA1C5BA07F00C3B2B8 /* KRRBFCenterChoose.m */,
+			);
+			path = KRRBFCenterChoose;
+			sourceTree = "<group>";
+		};
+		8EFD20DF1C5BA31500C3B2B8 /* KRRBFOLS */ = {
+			isa = PBXGroup;
+			children = (
+				8EFD20E41C5BABFB00C3B2B8 /* KRRBFCandidateCenter.h */,
+				8EFD20E51C5BABFB00C3B2B8 /* KRRBFCandidateCenter.m */,
+				8EFD20E11C5BA31E00C3B2B8 /* KRRBFOLS.h */,
+				8EFD20E21C5BA31E00C3B2B8 /* KRRBFOLS.m */,
+			);
+			path = KRRBFOLS;
+			sourceTree = "<group>";
+		};
+		8EFD20E01C5BA31500C3B2B8 /* KRRBFRandom */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = KRRBFRandom;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -186,10 +279,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E58EA3D1C2CFBA1002BD8E6 /* KRRBFOutputLayer.m in Sources */,
+				8EFD20DE1C5BA09F00C3B2B8 /* KRRBFActiviation.m in Sources */,
+				8E58EA331C2CFA75002BD8E6 /* KRRBFPattern.m in Sources */,
 				8E58EA171C2A8EE0002BD8E6 /* ViewController.m in Sources */,
 				8E58EA141C2A8EE0002BD8E6 /* AppDelegate.m in Sources */,
+				8EFD20DB1C5BA07F00C3B2B8 /* KRRBFCenterChoose.m in Sources */,
 				8E58EA111C2A8EE0002BD8E6 /* main.m in Sources */,
+				8E58EA301C2CFA56002BD8E6 /* KRRBFCenter.m in Sources */,
+				8E58EA391C2CFAB2002BD8E6 /* KRRBFHiddenLayer.m in Sources */,
 				8E58EA2C1C2A96D0002BD8E6 /* KRRBFNN.m in Sources */,
+				8EFD20E31C5BA31E00C3B2B8 /* KRRBFOLS.m in Sources */,
+				8E58EA361C2CFA9D002BD8E6 /* KRRBFOutput.m in Sources */,
+				8EFD20E61C5BABFB00C3B2B8 /* KRRBFCandidateCenter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
