@@ -30,7 +30,6 @@
     return self;
 }
 
-// Euclidean distance which multi-dimensional formula, 距離越小越近
 -(double)euclidean:(NSArray *)_x1 x2:(NSArray *)_x2
 {
     NSInteger _index = 0;
@@ -43,7 +42,6 @@
     // 累加完距離後直接開根號
     return (_index > 0) ? sqrtf(_sum) : _sum;
 }
-
 
 -(double)rbf:(NSArray *)_x1 x2:(NSArray *)_x2 sigma:(float)_sigma
 {

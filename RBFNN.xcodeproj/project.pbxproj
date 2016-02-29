@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8E2C40521C84933000ADB0AB /* KRMathLib.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E2C40511C84933000ADB0AB /* KRMathLib.m */; };
 		8E58EA111C2A8EE0002BD8E6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E58EA101C2A8EE0002BD8E6 /* main.m */; };
 		8E58EA141C2A8EE0002BD8E6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E58EA131C2A8EE0002BD8E6 /* AppDelegate.m */; };
 		8E58EA171C2A8EE0002BD8E6 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E58EA161C2A8EE0002BD8E6 /* ViewController.m */; };
@@ -26,6 +27,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8E2C40501C84933000ADB0AB /* KRMathLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KRMathLib.h; sourceTree = "<group>"; };
+		8E2C40511C84933000ADB0AB /* KRMathLib.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KRMathLib.m; sourceTree = "<group>"; };
 		8E58EA0C1C2A8EE0002BD8E6 /* RBFNN.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RBFNN.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E58EA101C2A8EE0002BD8E6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		8E58EA121C2A8EE0002BD8E6 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -69,6 +72,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8E2C404F1C84933000ADB0AB /* KRMathLib */ = {
+			isa = PBXGroup;
+			children = (
+				8E2C40501C84933000ADB0AB /* KRMathLib.h */,
+				8E2C40511C84933000ADB0AB /* KRMathLib.m */,
+			);
+			path = KRMathLib;
+			sourceTree = "<group>";
+		};
 		8E58EA031C2A8EE0002BD8E6 = {
 			isa = PBXGroup;
 			children = (
@@ -113,6 +125,7 @@
 		8E58EA261C2A96C0002BD8E6 /* ML */ = {
 			isa = PBXGroup;
 			children = (
+				8E2C404F1C84933000ADB0AB /* KRMathLib */,
 				8EFD20D71C5BA07F00C3B2B8 /* KRRBFActiviation */,
 				8EFD20D81C5BA07F00C3B2B8 /* KRRBFCenterChoose */,
 				8E58EA291C2A96C0002BD8E6 /* KRRBFPattern */,
@@ -279,6 +292,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E2C40521C84933000ADB0AB /* KRMathLib.m in Sources */,
 				8E58EA3D1C2CFBA1002BD8E6 /* KRRBFOutputLayer.m in Sources */,
 				8EFD20DE1C5BA09F00C3B2B8 /* KRRBFActiviation.m in Sources */,
 				8E58EA331C2CFA75002BD8E6 /* KRRBFPattern.m in Sources */,

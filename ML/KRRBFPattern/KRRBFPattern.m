@@ -12,7 +12,7 @@
 
 -(void)setupIndex:(NSInteger)_sIndex
 {
-    _index = [NSNumber numberWithInteger:_sIndex];
+    _number = [NSNumber numberWithInteger:_sIndex];
 }
 
 @end
