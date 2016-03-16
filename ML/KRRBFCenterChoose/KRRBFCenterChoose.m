@@ -34,6 +34,9 @@
     {
         _patterns = [NSMutableArray new];
         _rbfOLS   = [KRRBFOLS sharedOLS];
+        
+        // 待補上 隨機選取法 + SGA + KMeans
+        
     }
     return self;
 }

@@ -11,9 +11,11 @@
 @interface KRRBFPattern : NSObject
 
 @property (nonatomic, strong) NSMutableArray *features;
-@property (nonatomic, strong) NSNumber *number;
+@property (nonatomic, strong) NSNumber *indexKey;
 @property (nonatomic, assign) BOOL isCenter;
 
--(void)setupIndex:(NSInteger)_sIndex;
+-(instancetype)init;
+-(void)addFeatures:(NSArray *)_f;
+-(void)setIndexNumberAtIndex:(NSInteger)_index;
 
 @end

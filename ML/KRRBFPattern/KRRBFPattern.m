@@ -10,9 +10,29 @@
 
 @implementation KRRBFPattern
 
--(void)setupIndex:(NSInteger)_sIndex
+-(instancetype)init
 {
-    _number = [NSNumber numberWithInteger:_sIndex];
+    self = [super init];
+    if( self )
+    {
+        _features    = [NSMutableArray new];
+        _indexKey = nil;
+        _isCenter    = NO;
+    }
+    return self;
+}
+
+-(void)addFeatures:(NSArray *)_f
+{
+    if( nil != _f && [_f count] > 0 )
+    {
+        [_features addObjectsFromArray:_f];
+    }
+}
+
+-(void)setIndexNumberAtIndex:(NSInteger)_index
+{
+    _indexKey = [NSNumber numberWithInteger:_index];
 }
 
 @end

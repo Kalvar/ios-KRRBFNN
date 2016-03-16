@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8E2C40521C84933000ADB0AB /* KRMathLib.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E2C40511C84933000ADB0AB /* KRMathLib.m */; };
+		8E2C40581C9871F700ADB0AB /* KRRBFTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E2C40571C9871F700ADB0AB /* KRRBFTarget.m */; };
 		8E58EA111C2A8EE0002BD8E6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E58EA101C2A8EE0002BD8E6 /* main.m */; };
 		8E58EA141C2A8EE0002BD8E6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E58EA131C2A8EE0002BD8E6 /* AppDelegate.m */; };
 		8E58EA171C2A8EE0002BD8E6 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E58EA161C2A8EE0002BD8E6 /* ViewController.m */; };
@@ -29,6 +30,8 @@
 /* Begin PBXFileReference section */
 		8E2C40501C84933000ADB0AB /* KRMathLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KRMathLib.h; sourceTree = "<group>"; };
 		8E2C40511C84933000ADB0AB /* KRMathLib.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KRMathLib.m; sourceTree = "<group>"; };
+		8E2C40561C9871F700ADB0AB /* KRRBFTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KRRBFTarget.h; sourceTree = "<group>"; };
+		8E2C40571C9871F700ADB0AB /* KRRBFTarget.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KRRBFTarget.m; sourceTree = "<group>"; };
 		8E58EA0C1C2A8EE0002BD8E6 /* RBFNN.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RBFNN.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E58EA101C2A8EE0002BD8E6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		8E58EA121C2A8EE0002BD8E6 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -153,6 +156,8 @@
 			children = (
 				8E58EA341C2CFA9D002BD8E6 /* KRRBFOutput.h */,
 				8E58EA351C2CFA9D002BD8E6 /* KRRBFOutput.m */,
+				8E2C40561C9871F700ADB0AB /* KRRBFTarget.h */,
+				8E2C40571C9871F700ADB0AB /* KRRBFTarget.m */,
 			);
 			path = KRRBFOutput;
 			sourceTree = "<group>";
@@ -306,6 +311,7 @@
 				8EFD20E31C5BA31E00C3B2B8 /* KRRBFOLS.m in Sources */,
 				8E58EA361C2CFA9D002BD8E6 /* KRRBFOutput.m in Sources */,
 				8EFD20E61C5BABFB00C3B2B8 /* KRRBFCandidateCenter.m in Sources */,
+				8E2C40581C9871F700ADB0AB /* KRRBFTarget.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
