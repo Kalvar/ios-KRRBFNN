@@ -177,26 +177,81 @@ static NSString *kKRRBFOLSCalculatedMaxDistanceKey = @"maxDistance";
     KRRBFPattern *_newCenter = [_trainSamples objectAtIndex:_maxErrIndex];
     _newCenter.isCenter      = YES; // To record this pattern is center too.
     
-    // 再想想這裡的流程要怎麼設計，參考書本 P.185
     NSArray *_ss             = [_centerRBFDistances objectAtIndex:_maxErrIndex];
     double _sumError         = _maxErrValue;
     [_trainSamples removeObjectAtIndex:_maxErrIndex];
     [_centerRBFDistances removeObjectAtIndex:_maxErrIndex];
     [_errors removeAllObjects];
     
+    // Alphaik = (Si x Uk) / (Si x Si)
+    // Sk = Uk - Sum(Alphaik x Si), for Sum scope is i=1 ... to k-1
+    NSInteger _k            = 0;
     NSInteger _patternCount = [_patterns count];
-    //while( _sumError<_tolerance && _k<[_newCenter.features count] )
-    for( NSInteger _k=0; (_sumError<_tolerance && _k<_patternCount ); _k++ )
+    while( _sumError<_tolerance && _k<_patternCount )
+    //for( NSInteger _k=0; (_sumError<_tolerance && _k<_patternCount ); _k++ )
     {
-        // TODO: 待補上選擇其它中心點的算式
+        NSInteger _maxErrIndex = -1;
+        double _maxErrValue    = 0.0f;
         
+        _k += 1;
+        // _i is Uk that another RBF Center picker index
+        // 列舉每一個還沒被選上當中心點的 Pattern 來做運算
+        for( NSInteger _i=0; _i<_patternCount-_k+1; _i++ )
+        {
+            // The _s is current uk (same as phi), here must use "copy" to avoid memory reference
+            NSArray *_s = [[_centerRBFDistances objectAtIndex:_i] copy];
+            // 開始計算並讓 _phi 連減 alpha(k) 與 S(i) 互乘的值
+            // _j is chose Center picker index
+            for( NSInteger _j=0; _j<_k-1; _j++ )
+            {
+                // 這裡的 Code 以 P.179 的 5.16 公式為主 (參考該頁上方的 S2, S3 範例)，而後 P.185 的 phi(:, i) - SS * a(:, i) 已解出，就照 5.16 公式一樣，
+                // SS 是 m x n 矩陣，a(:, i) 為 m x 1 矩陣，運算方式是 phi(:, i) - ( SS[0] x a(:, i)[0] + SS[0] x a(:, i)[1] ) ... (用連減也可以)，
+                
+                // formula : alphaValue = (SS(:, j)' * phi(:, i)) / (SS(:, j)' * SS(:, j))
+                NSArray *_ssj      = [_ss objectAtIndex:_j];
+                NSArray *_phi      = [_centerRBFDistances objectAtIndex:_i];
+                
+                // (取出 RBF 中心點 * 另一個 RBF 中心點) / (RBF 中心點 * RBF 中心點)
+                double _alphaValue = [_mathLib sumMatrix:_ssj anotherMatrix:_phi] / [_mathLib sumMatrix:_ssj anotherMatrix:_ssj];
+                
+                // 在這裡將 sj * alpha (即公式裡的 si)
+                NSArray *_alphaSi  = [_mathLib multiplyMatrix:_ssj byNumber:_alphaValue];
+                
+                // 連減 SUM(alpha(ik) * s(i))
+                _s = [_mathLib minusMatrix:_s anotherMatrix:_alphaSi];
+            }
+            
+            double _h          = [_mathLib sumMatrix:_s anotherMatrix:_s];
+            double _averageErr = 0.0f;
+            for( KRRBFTarget *_olsTarget in _targets )
+            {
+                NSArray *_sampleTargets = _olsTarget.sameSequences;
+                double _t               = [_mathLib sumMatrix:_sampleTargets anotherMatrix:_sampleTargets];
+                double _g               = [_mathLib sumMatrix:_s anotherMatrix:_sampleTargets] / _h;
+                double _errValue        = _h * (_g * _g) / _t;
+                [_errors addObject:[NSNumber numberWithDouble:_errValue]];
+                _averageErr            += _errValue;
+            }
+            _averageErr /= _countTarget;
+            if( _maxErrIndex < 0 || _averageErr > _maxErrValue )
+            {
+                _maxErrIndex = _i;
+                _maxErrValue = _averageErr;
+            }
+        }
         
+        // 取出這次誤差下降率最大的中心點
+        KRRBFPattern *_newCenter = [_trainSamples objectAtIndex:_maxErrIndex];
+        _newCenter.isCenter      = YES; // To record this pattern is center too.
         
+        NSArray *_ss             = [_centerRBFDistances objectAtIndex:_maxErrIndex];
+        double _sumError         = _maxErrValue;
+        [_trainSamples removeObjectAtIndex:_maxErrIndex];
+        [_centerRBFDistances removeObjectAtIndex:_maxErrIndex];
+        [_errors removeAllObjects];
         
     }
-    
 
-    
 }
 
 @end

@@ -30,5 +30,6 @@
 
 -(NSArray *)multiplyMatrix:(NSArray *)_matrix byNumber:(double)_number;
 -(NSArray *)plusMatrix:(NSArray *)_matrix anotherMatrix:(NSArray *)_anotherMatrix;
+-(NSArray *)minusMatrix:(NSArray *)_matrix anotherMatrix:(NSArray *)_anotherMatrix;
 
 @end

@@ -96,4 +96,18 @@
     return _array;
 }
 
+// ex : [1, 2] - [3, 4]
+-(NSArray *)minusMatrix:(NSArray *)_matrix anotherMatrix:(NSArray *)_anotherMatrix
+{
+    NSMutableArray *_array = [NSMutableArray new];
+    NSInteger _index       = 0;
+    for( NSNumber *_value in _matrix )
+    {
+        double _newValue = [_value doubleValue] - [[_anotherMatrix objectAtIndex:_index] doubleValue];
+        [_array addObject:[NSNumber numberWithDouble:_newValue]];
+        ++_index;
+    }
+    return _array;
+}
+
 @end
