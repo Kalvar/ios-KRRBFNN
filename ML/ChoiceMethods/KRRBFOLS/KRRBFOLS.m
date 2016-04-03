@@ -183,7 +183,7 @@ static NSString *kKRRBFOLSCandidateMaxDistance = @"candidateMaxDistance";
     KRRBFPattern *_newCenter = [_trainSamples objectAtIndex:_maxErrIndex];
     _newCenter.isCenter      = YES; // To record this pattern is center too.
     
-    
+    // 是否要實作 NSCopying for KRRBFPattern ?
     [_choseCenters addObject:_newCenter];
     
     
@@ -201,7 +201,6 @@ static NSString *kKRRBFOLSCandidateMaxDistance = @"candidateMaxDistance";
     NSInteger _k            = 0;
     NSInteger _patternCount = [_trainSamples count];
     while( _sumError<_tolerance && _k<_patternCount )
-    //for( NSInteger _k=0; (_sumError<_tolerance && _k<_patternCount ); _k++ )
     {
         NSInteger _maxErrIndex = -1;
         double _maxErrValue    = 0.0f;
@@ -263,10 +262,14 @@ static NSString *kKRRBFOLSCandidateMaxDistance = @"candidateMaxDistance";
         
         [_ss addObject:[_centerRBFDistances objectAtIndex:_maxErrIndex]];
         
+        NSLog(@"sumErr %f, _maxErrValue %f", _sumError, _maxErrValue);
+        
         _sumError               += _maxErrValue;
         [_trainSamples removeObjectAtIndex:_maxErrIndex];
         [_centerRBFDistances removeObjectAtIndex:_maxErrIndex];
         [_errors removeAllObjects];
+        
+        
         
     } // end while
     
@@ -276,6 +279,7 @@ static NSString *kKRRBFOLSCandidateMaxDistance = @"candidateMaxDistance";
 }
 
 #pragma --mark Unit Test
+
 
 -(void)testOls
 {
@@ -328,13 +332,12 @@ static NSString *kKRRBFOLSCandidateMaxDistance = @"candidateMaxDistance";
         }
         [_targets addObject:targetOutput];
         
-        NSLog(@"targetOutput.sameSequences : %@", targetOutput.sameSequences);
+        //NSLog(@"targetOutput.sameSequences : %@", targetOutput.sameSequences);
     }
     
-    NSLog(@"_targets : %@", _targets);
+    //NSLog(@"_targets : %@", _targets);
     
-    // 必須找找看 RBFNN 的誤差設定方式 ... (重要，似乎跟其它神經網路的收斂誤差值的定義不同)
-    _tolerance = 0.8f;
+    _tolerance = 0.999f; // = 一般 NN 的 0.001 收斂誤差
     
     [self olsWithPatterns:_patterns targets:_targets];
 }

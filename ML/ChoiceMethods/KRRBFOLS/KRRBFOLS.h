@@ -15,7 +15,8 @@
 
 // Chose centers by algorithm calculated
 @property (nonatomic, strong) NSMutableArray *centers;
-// 正確率 (容忍值 ; 收斂誤差 ; RBFNN 正確率越大代表誤差越小 ?)
+// 正確率 (RBFNN 使用的收斂誤差是正確率，即 1.0f - 正確率 = 一般類神經網路的收斂誤差)
+// 正確率越趨近於 1.0，則預測效果越好，隱藏層神經元就越多
 @property (nonatomic, assign) double tolerance;
 
 +(instancetype)sharedOLS;
