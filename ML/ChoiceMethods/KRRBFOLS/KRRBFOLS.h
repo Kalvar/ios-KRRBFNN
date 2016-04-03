@@ -15,7 +15,7 @@
 
 // Chose centers by algorithm calculated
 @property (nonatomic, strong) NSMutableArray *centers;
-// 正確率 (容忍值 ; 收斂誤差)
+// 正確率 (容忍值 ; 收斂誤差 ; RBFNN 正確率越大代表誤差越小 ?)
 @property (nonatomic, assign) double tolerance;
 
 +(instancetype)sharedOLS;

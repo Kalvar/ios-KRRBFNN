@@ -96,6 +96,8 @@ static NSString *kKRRBFOLSCandidateMaxDistance = @"candidateMaxDistance";
 // _targets 是目標輸出值，書本公式裡的 d，Sample Code 裡的 t
 -(NSArray *)olsWithPatterns:(NSArray<KRRBFPattern *> *)_patterns targets:(NSArray<KRRBFTarget *> *)_targets
 {
+    NSMutableArray <KRRBFPattern *> *_choseCenters = [NSMutableArray new];
+    
     // Copy a pattern array to do continue calculation.
     NSMutableArray *_trainSamples      = [_patterns mutableCopy];
     
@@ -181,6 +183,10 @@ static NSString *kKRRBFOLSCandidateMaxDistance = @"candidateMaxDistance";
     KRRBFPattern *_newCenter = [_trainSamples objectAtIndex:_maxErrIndex];
     _newCenter.isCenter      = YES; // To record this pattern is center too.
     
+    
+    [_choseCenters addObject:_newCenter];
+    
+    
     // 再想想這裡的流程要怎麼重新設計，參考書本 P.185
     NSMutableArray *_ss      = [NSMutableArray new];
     [_ss addObject:[_centerRBFDistances objectAtIndex:_maxErrIndex]];
@@ -251,6 +257,10 @@ static NSString *kKRRBFOLSCandidateMaxDistance = @"candidateMaxDistance";
         KRRBFPattern *_newCenter = [_trainSamples objectAtIndex:_maxErrIndex];
         _newCenter.isCenter      = YES;
         
+        
+        [_choseCenters addObject:_newCenter];
+        
+        
         [_ss addObject:[_centerRBFDistances objectAtIndex:_maxErrIndex]];
         
         _sumError               += _maxErrValue;
@@ -260,11 +270,12 @@ static NSString *kKRRBFOLSCandidateMaxDistance = @"candidateMaxDistance";
         
     } // end while
     
-    NSLog(@"選中的 %li Centers : %@", [_ss count], _ss);
+    NSLog(@"選中的 %li 個 Centers : %@", [_choseCenters count], _choseCenters);
     
     return _ss;
 }
 
+#pragma --mark Unit Test
 
 -(void)testOls
 {
@@ -296,9 +307,9 @@ static NSString *kKRRBFOLSCandidateMaxDistance = @"candidateMaxDistance";
         
         [_patterns addObject:p];
         
-        NSLog(@"features : %@", p.features);
-        NSLog(@"targets : %@", p.targets);
-        NSLog(@"========== \n\n");
+//        NSLog(@"features : %@", p.features);
+//        NSLog(@"targets : %@", p.targets);
+//        NSLog(@"========== \n\n");
         
     }
     
@@ -322,7 +333,8 @@ static NSString *kKRRBFOLSCandidateMaxDistance = @"candidateMaxDistance";
     
     NSLog(@"_targets : %@", _targets);
     
-    _tolerance = 0.5f;
+    // 必須找找看 RBFNN 的誤差設定方式 ... (重要，似乎跟其它神經網路的收斂誤差值的定義不同)
+    _tolerance = 0.8f;
     
     [self olsWithPatterns:_patterns targets:_targets];
 }
