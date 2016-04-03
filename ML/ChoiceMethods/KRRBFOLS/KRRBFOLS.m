@@ -7,14 +7,16 @@
 //
 
 #import "KRRBFOLS.h"
+#import "KRMathLib.h"
+
 #import "KRRBFActiviation.h"
 #import "KRRBFPattern.h"
 #import "KRRBFTarget.h"
-#import "KRRBFCandidateCenter.h"
-#import "KRMathLib.h"
 
-static NSString *kKRRBFOLSCalculatedDistancesKey   = @"distances";
-static NSString *kKRRBFOLSCalculatedMaxDistanceKey = @"maxDistance";
+#import "KRRBFCandidateCenter.h"
+
+static NSString *kKRRBFOLSCandidateCenters     = @"candidateCenters";
+static NSString *kKRRBFOLSCandidateMaxDistance = @"candidateMaxDistance";
 
 @interface KRRBFOLS ()
 
@@ -23,44 +25,46 @@ static NSString *kKRRBFOLSCalculatedMaxDistanceKey = @"maxDistance";
 
 @end
 
-@implementation KRRBFOLS (calculateDistance)
-
+@implementation KRRBFOLS (candidatesDistance)
 // 除了計算 Patterns 和 Centers 之間的距離外，同步取出最大的距離值
--(NSDictionary *)_calculateCenterDistancesWithPatterns:(NSArray *)_patterns
+-(NSDictionary *)_calculateDistancesFromPatterns:(NSArray <KRRBFPattern *> *)_patterns toCenters:(NSArray <KRRBFPattern *> *)_centers
 {
-    double _maxDistance               = -1.0f;
-    NSMutableDictionary *_withCenters = [NSMutableDictionary new];
+    double _maxDistance                    = -1.0f;
+    NSMutableDictionary *_candidateCenters = [NSMutableDictionary new];
+    // Looping all patterns
     for( KRRBFPattern *_pattern in _patterns )
     {
         NSMutableArray *_centerDistances = [NSMutableArray new];
-        for( KRRBFPattern *_candidate in _patterns )
+        // One pattern to all centers
+        for( KRRBFPattern *_candidate in _centers )
         {
             double _distance                       = [self.activeFunction euclidean:_pattern.features x2:_candidate.features];
-            KRRBFCandidateCenter *_candidateCenter = [[KRRBFCandidateCenter alloc] init];
-            // 記錄 Pattern(i) 跟 Candidate Center(j) 之間的距離
-            [_candidateCenter recordPatternIndex:_pattern.indexKey centerIndex:_candidate.indexKey distance:_distance];
             
+            // 記錄 Pattern(i) 跟 Candidate Center(j) 之間的距離 (將來的改進方法備用，暫無用處，可考慮移除)
+            KRRBFCandidateCenter *_candidateCenter = [[KRRBFCandidateCenter alloc] init];
+            [_candidateCenter recordPatternIndex:_pattern.indexKey centerIndex:_candidate.indexKey distance:_distance];
             [_centerDistances addObject:_candidateCenter];
+            
             // 取出最大距離 (用於後續計算 Sigma)
             if( _distance > _maxDistance )
             {
                 _maxDistance = _distance;
             }
         }
-        [_withCenters setObject:_centerDistances forKey:_pattern.indexKey];
+        [_candidateCenters setObject:_centerDistances forKey:_pattern.indexKey];
     }
-    return @{kKRRBFOLSCalculatedDistancesKey   : _withCenters,
-             kKRRBFOLSCalculatedMaxDistanceKey : [NSNumber numberWithDouble:_maxDistance]};
+    return @{kKRRBFOLSCandidateCenters     : _candidateCenters,
+             kKRRBFOLSCandidateMaxDistance : [NSNumber numberWithDouble:_maxDistance]};
 }
 
--(NSDictionary *)_fetchCenterDistancesByResults:(NSDictionary *)_results
+-(NSDictionary *)_getCandidateCentersByResults:(NSDictionary *)_results
 {
-    return [_results objectForKey:kKRRBFOLSCalculatedDistancesKey];
+    return [_results objectForKey:kKRRBFOLSCandidateCenters];
 }
 
--(NSNumber *)_fetchMaxDistanceByResults:(NSDictionary *)_results
+-(NSNumber *)_getMaxDistanceByResults:(NSDictionary *)_results
 {
-    return [_results objectForKey:kKRRBFOLSCalculatedMaxDistanceKey];
+    return [_results objectForKey:kKRRBFOLSCandidateMaxDistance];
 }
 
 @end
@@ -90,21 +94,21 @@ static NSString *kKRRBFOLSCalculatedMaxDistanceKey = @"maxDistance";
 }
 
 // _targets 是目標輸出值，書本公式裡的 d，Sample Code 裡的 t
--(void)olsWithPatterns:(NSArray<KRRBFPattern *> *)_patterns targets:(NSArray<KRRBFTarget *> *)_targets
+-(NSArray *)olsWithPatterns:(NSArray<KRRBFPattern *> *)_patterns targets:(NSArray<KRRBFTarget *> *)_targets
 {
     // Copy a pattern array to do continue calculation.
     NSMutableArray *_trainSamples      = [_patterns mutableCopy];
     
     // 運算原理是每一個 Pattern 都是 Center 的 Candidate，也就是每一個 Pattern 都有可能成為 Center，
     // 這裡開始對每一個中心點做交互運算，例如有 300 筆 Training Patterns，這裡就要跑 300 * 300 = 9 萬次去計算所有 Patterns 彼此之間的距離。
-    NSDictionary *_calculatedDistances = [self _calculateCenterDistancesWithPatterns:_trainSamples];
+    NSDictionary *_calculatedDistances = [self _calculateDistancesFromPatterns:_trainSamples toCenters:_trainSamples];
     
-    // 取得 Patterns 和 Candidate Centers 之間運算完的距離資料 (暫無用處)
-    //NSDictionary *_centerDistances     = [self _fetchCenterDistancesByResults:_calculatedDistances];
+    // 取得 Patterns 和 Candidate Centers 之間運算完的距離資料 (暫無用處，可考慮移除此方法)
+    //NSDictionary *_candidateDistances = [self _getCandidateCentersByResults:_calculatedDistances];
     
     // 計算 Sigma (標準差)
     // 先取出 Patterns 和 Candidate Centers 之間運算完後最大的距離值
-    NSNumber *_maxDistance             = [self _fetchMaxDistanceByResults:_calculatedDistances];
+    NSNumber *_maxDistance             = [self _getMaxDistanceByResults:_calculatedDistances];
     double _sigma                      = [_maxDistance doubleValue] / sqrt([_trainSamples count]);
     // 用算好的 Sigma 和活化函式來重新運算每一筆 Pattern 和 Centers 之間的距離 (RBF)
     NSMutableArray *_centerRBFDistances = [NSMutableArray new];
@@ -138,9 +142,9 @@ static NSString *kKRRBFOLSCalculatedMaxDistanceKey = @"maxDistance";
     NSInteger _maxErrIndex    = -1;
     double _maxErrValue       = 0.0f;
     // 先依序列舉出每一個 Center 以求得 RBFNN 的第 1 個初始中心點
-    NSInteger _centerNumber     = -1;
+    NSInteger _centerNumber   = -1;
     // 有幾個分類的期望輸出
-    NSInteger _countTarget      = [_targets count];
+    NSInteger _countTarget    = [_targets count];
     for( NSArray *_centerRBFs in _centerRBFDistances )
     {
         _centerNumber += 1;
@@ -148,7 +152,7 @@ static NSString *kKRRBFOLSCalculatedMaxDistanceKey = @"maxDistance";
         // _s is RBF values of specified center
         NSArray *_s    = _centerRBFs;
         double _h      = [_mathLib sumMatrix:_s anotherMatrix:_s];
-        // @ 針對多分類做算法修改 (原公式只有單分類輸出) :
+        // 針對多分類做算法修改 (原公式只有單分類輸出) :
         // 先算出該中心點對所有訓練範本其相同維度的期望輸出值的所有誤差下降率總和，
         // 再取其平均值，以求得該中心點對所有期望輸出的平均誤差下降率( Error Reduction Rate )。
         double _averageErr = 0.0f;
@@ -177,16 +181,19 @@ static NSString *kKRRBFOLSCalculatedMaxDistanceKey = @"maxDistance";
     KRRBFPattern *_newCenter = [_trainSamples objectAtIndex:_maxErrIndex];
     _newCenter.isCenter      = YES; // To record this pattern is center too.
     
-    NSArray *_ss             = [_centerRBFDistances objectAtIndex:_maxErrIndex];
+    // 再想想這裡的流程要怎麼重新設計，參考書本 P.185
+    NSMutableArray *_ss      = [NSMutableArray new];
+    [_ss addObject:[_centerRBFDistances objectAtIndex:_maxErrIndex]];
     double _sumError         = _maxErrValue;
     [_trainSamples removeObjectAtIndex:_maxErrIndex];
     [_centerRBFDistances removeObjectAtIndex:_maxErrIndex];
     [_errors removeAllObjects];
     
+    // 再來開始挑選其它的中心點 (如果第 1 個中心點未滿足收斂需求的話)
     // Alphaik = (Si x Uk) / (Si x Si)
     // Sk = Uk - Sum(Alphaik x Si), for Sum scope is i=1 ... to k-1
     NSInteger _k            = 0;
-    NSInteger _patternCount = [_patterns count];
+    NSInteger _patternCount = [_trainSamples count];
     while( _sumError<_tolerance && _k<_patternCount )
     //for( NSInteger _k=0; (_sumError<_tolerance && _k<_patternCount ); _k++ )
     {
@@ -242,16 +249,82 @@ static NSString *kKRRBFOLSCalculatedMaxDistanceKey = @"maxDistance";
         
         // 取出這次誤差下降率最大的中心點
         KRRBFPattern *_newCenter = [_trainSamples objectAtIndex:_maxErrIndex];
-        _newCenter.isCenter      = YES; // To record this pattern is center too.
+        _newCenter.isCenter      = YES;
         
-        NSArray *_ss             = [_centerRBFDistances objectAtIndex:_maxErrIndex];
-        double _sumError         = _maxErrValue;
+        [_ss addObject:[_centerRBFDistances objectAtIndex:_maxErrIndex]];
+        
+        _sumError               += _maxErrValue;
         [_trainSamples removeObjectAtIndex:_maxErrIndex];
         [_centerRBFDistances removeObjectAtIndex:_maxErrIndex];
         [_errors removeAllObjects];
         
-    }
+    } // end while
+    
+    NSLog(@"選中的 %li Centers : %@", [_ss count], _ss);
+    
+    return _ss;
+}
 
+
+-(void)testOls
+{
+    NSMutableArray<KRRBFPattern *> *_patterns = [NSMutableArray new];
+    
+    NSInteger patternItem  = 20; // Testing patterns
+    NSInteger featureItem  = 10; // How many features of each pattern
+    NSInteger featureScope = 21; // Features of pattern that every scope is start in 0
+    NSInteger targetItem   = 5;  // Target outputs of each pattern
+    NSInteger targetScope  = 10; // Scope of target outputs that start in 0
+    for( NSInteger i=0; i<patternItem; i++ )
+    {
+        KRRBFPattern *p = [[KRRBFPattern alloc] init];
+        p.indexKey      = @(i);
+        // 隨機亂數 x 個特徵值其範圍在 0 ~ y 之間
+        for( NSInteger f=0; f<featureItem; f++ )
+        {
+            [p.features addObject:@( arc4random() % featureScope )];
+        }
+        
+        //NSLog(@"p.features : %@", p.features);
+        
+        // Adding the targets of patterns at the same time
+        // x output targets of 1 pattern
+        for( NSInteger t=0; t<targetItem; t++ )
+        {
+            [p addTarget:( arc4random() % targetScope )];
+        }
+        
+        [_patterns addObject:p];
+        
+        NSLog(@"features : %@", p.features);
+        NSLog(@"targets : %@", p.targets);
+        NSLog(@"========== \n\n");
+        
+    }
+    
+    // 製作 RBFTarget
+    // 設定 sameSequences : 先 Loop 所有的 Patterns Outputs，之後取出同維度的所有 Target Output 集合在一起
+    // 先取出有幾個期望輸出 (幾個分類)
+    NSInteger targetCount = [[[_patterns firstObject] targets] count];
+    // 再依序 Loop 所有的 Patterns 將它們的期望輸出值依序放入各自同維度的陣列裡集合起來
+    NSMutableArray<KRRBFTarget *> *_targets = [NSMutableArray new];
+    for( NSInteger i=0; i<targetCount; i++ )
+    {
+        KRRBFTarget *targetOutput = [[KRRBFTarget alloc] init];
+        for( KRRBFPattern *p in _patterns )
+        {
+            [targetOutput.sameSequences addObject:[p.targets objectAtIndex:i]];
+        }
+        [_targets addObject:targetOutput];
+        
+        NSLog(@"targetOutput.sameSequences : %@", targetOutput.sameSequences);
+    }
+    
+    NSLog(@"_targets : %@", _targets);
+    
+    _tolerance = 0.5f;
+    
+    [self olsWithPatterns:_patterns targets:_targets];
 }
 
 @end

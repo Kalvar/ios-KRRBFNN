@@ -15,6 +15,5 @@
 @property (nonatomic, strong) NSMutableArray *sameSequences;  // 相同位置(維度)的期望輸出
 
 -(instancetype)init;
--(void)addTargetValues:(NSArray *)_targets;
 
 @end

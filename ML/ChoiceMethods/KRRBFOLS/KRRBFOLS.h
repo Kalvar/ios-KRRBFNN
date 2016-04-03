@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+@class KRRBFPattern;
+@class KRRBFTarget;
+
 @interface KRRBFOLS : NSObject
 
 // Chose centers by algorithm calculated
@@ -17,5 +20,9 @@
 
 +(instancetype)sharedOLS;
 -(instancetype)init;
+
+-(NSArray *)olsWithPatterns:(NSArray<KRRBFPattern *> *)_patterns targets:(NSArray<KRRBFTarget *> *)_targets;
+
+-(void)testOls;
 
 @end

@@ -21,9 +21,4 @@
     return self;
 }
 
--(void)addTargetValues:(NSArray *)_targets
-{
-    [_sameSequences addObjectsFromArray:_targets];
-}
-
 @end

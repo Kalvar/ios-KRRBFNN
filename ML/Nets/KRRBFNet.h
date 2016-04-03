@@ -1,14 +1,14 @@
 //
-//  KRRBFPattern.h
+//  KRRBFNet.h
 //  RBFNN
 //
-//  Created by Kalvar Lin on 2015/12/25.
-//  Copyright © 2015年 Kalvar Lin. All rights reserved.
+//  Created by Kalvar Lin on 2016/3/30.
+//  Copyright © 2016年 Kalvar Lin. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
-@interface KRRBFPattern : NSObject
+@interface KRRBFNet : NSObject
 
 @property (nonatomic, strong) NSMutableArray *features;
 @property (nonatomic, strong) NSNumber *indexKey;
@@ -16,6 +16,5 @@
 
 -(instancetype)init;
 -(void)addFeatures:(NSArray *)_f;
--(void)setIndexNumberAtIndex:(NSInteger)_index;
 
 @end

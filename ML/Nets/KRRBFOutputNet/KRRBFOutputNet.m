@@ -6,9 +6,9 @@
 //  Copyright © 2015年 Kalvar Lin. All rights reserved.
 //
 
-#import "KRRBFOutput.h"
+#import "KRRBFOutputNet.h"
 
-@implementation KRRBFOutput
+@implementation KRRBFOutputNet
 
 -(instancetype)init
 {
@@ -19,7 +19,8 @@
         _bias        = 0.0f;
         _targetValue = 0.0f;
         _outputValue = 0.0f;
-        _indexKey    = nil;
+        // 是對應哪一個 KRRBFPattern 的 ID Key
+        //_indexKey;
     }
     return self;
 }

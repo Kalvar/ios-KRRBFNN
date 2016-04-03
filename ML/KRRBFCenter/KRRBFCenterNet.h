@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface KRRBFCenter : NSObject
+@interface KRRBFCenterNet : NSObject
 
 @property (nonatomic, strong) NSMutableArray *features;
 

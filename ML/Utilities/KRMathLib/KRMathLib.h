@@ -17,7 +17,8 @@
 
 @interface KRMathLib (fixNumber)
 
--(NSInteger)randomMax:(NSInteger)_maxValue min:(NSInteger)_minValue;
+-(NSInteger)randomIntegerMax:(NSInteger)_maxValue min:(NSInteger)_minValue;
+-(double)randomDoubleMax:(double)_maxValue min:(double)_minValue;
 
 @end
 
@@ -31,5 +32,14 @@
 -(NSArray *)multiplyMatrix:(NSArray *)_matrix byNumber:(double)_number;
 -(NSArray *)plusMatrix:(NSArray *)_matrix anotherMatrix:(NSArray *)_anotherMatrix;
 -(NSArray *)minusMatrix:(NSArray *)_matrix anotherMatrix:(NSArray *)_anotherMatrix;
+
+-(NSMutableArray *)multiplyMatrix:(NSArray *)_parentMatrix anotherMatrix:(NSArray *)_childMatrix;
+-(NSMutableArray *)transposeMatrix:(NSArray *)_matrix;
+
+@end
+
+@interface KRMathLib (fixEquations)
+
+-(NSMutableArray *)solveEquationsAtMatrix:(NSArray *)_matrix outputs:(NSArray *)_outputs;
 
 @end

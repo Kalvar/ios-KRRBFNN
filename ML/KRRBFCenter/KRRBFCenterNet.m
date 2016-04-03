@@ -6,8 +6,8 @@
 //  Copyright © 2015年 Kalvar Lin. All rights reserved.
 //
 
-#import "KRRBFCenter.h"
+#import "KRRBFCenterNet.h"
 
-@implementation KRRBFCenter
+@implementation KRRBFCenterNet
 
 @end
