@@ -16,7 +16,6 @@
     if( self )
     {
         _sumValue    = 0.0f;
-        _bias        = 0.0f;
         _targetValue = 0.0f;
         _outputValue = 0.0f;
         // 是對應哪一個 KRRBFPattern 的 ID Key

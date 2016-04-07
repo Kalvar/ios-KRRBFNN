@@ -40,6 +40,6 @@
 
 @interface KRMathLib (fixEquations)
 
--(NSMutableArray *)solveEquationsAtMatrix:(NSArray *)_matrix outputs:(NSArray *)_outputs;
+-(NSMutableArray <NSNumber *> *)solveEquationsAtMatrix:(NSArray *)_matrix outputs:(NSArray *)_outputs;
 
 @end

@@ -199,7 +199,7 @@
 
 // 使用最小平方法來求方陣解聯立
 // Solves that simultaneous equations
--(NSMutableArray *)solveEquationsAtMatrix:(NSArray *)_matrix outputs:(NSArray *)_outputs
+-(NSMutableArray <NSNumber *> *)solveEquationsAtMatrix:(NSArray *)_matrix outputs:(NSArray *)_outputs
 {
     NSMutableArray *_solvedEquations = nil;
     

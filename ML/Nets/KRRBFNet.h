@@ -8,11 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-@interface KRRBFNet : NSObject
+@interface KRRBFNet : NSObject <NSCopying>
 
-@property (nonatomic, strong) NSMutableArray *features;
-@property (nonatomic, strong) NSNumber *indexKey;
-@property (nonatomic, assign) BOOL isCenter;
+@property (nonatomic, strong) NSMutableArray *features; // 特幑向量
+@property (nonatomic, strong) NSNumber *indexKey;       // 第幾筆資料或第幾顆神經元
+@property (nonatomic, assign) double bias;              // 偏權值
 
 -(instancetype)init;
 -(void)addFeatures:(NSArray *)_f;

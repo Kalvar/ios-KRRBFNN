@@ -10,4 +10,33 @@
 
 @implementation KRRBFCenterNet
 
+-(instancetype)initWithFeatures:(NSArray *)_features
+{
+    self = [super init];
+    if( self )
+    {
+        [self copyWithFeatures:_features];
+    }
+    return self;
+}
+
+-(instancetype)init
+{
+    self = [self initWithFeatures:nil];
+    if( self )
+    {
+        
+    }
+    return self;
+}
+
+// Deep copy with another array.
+-(void)copyWithFeatures:(NSArray *)_features
+{
+    if( _features )
+    {
+        self.features = [[NSMutableArray alloc] initWithArray:_features copyItems:YES];
+    }
+}
+
 @end

@@ -6,20 +6,20 @@
 //  Copyright © 2016年 Kalvar Lin. All rights reserved.
 //
 
-#import "KRRBFCenterChoice.h"
+#import "KRRBFChoice.h"
 
-@interface KRRBFCenterChoice ()
+@interface KRRBFChoice ()
 
 @end
 
-@implementation KRRBFCenterChoice
+@implementation KRRBFChoice
 
-+(instancetype)sharedChoose
++(instancetype)sharedChoice
 {
     static dispatch_once_t pred;
-    static KRRBFCenterChoice *_object = nil;
+    static KRRBFChoice *_object = nil;
     dispatch_once(&pred, ^{
-        _object = [[KRRBFCenterChoice alloc] init];
+        _object = [[KRRBFChoice alloc] init];
     });
     return _object;
 }

@@ -13,6 +13,7 @@
 @property (nonatomic, strong) NSMutableArray *targets; // 本 Pattern 的目標輸出值
 
 -(instancetype)init;
+-(void)addFeature:(double)_featureValue;
 -(void)addTarget:(double)_targetValue;
 
 @end

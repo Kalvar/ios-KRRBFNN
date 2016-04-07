@@ -17,7 +17,7 @@
     {
         _features = [NSMutableArray new];
         _indexKey = nil;
-        _isCenter = NO;
+        _bias     = 0.0f;
     }
     return self;
 }
@@ -28,6 +28,16 @@
     {
         [_features addObjectsFromArray:_f];
     }
+}
+
+#pragma --mark NSCopying
+-(instancetype)copyWithZone:(NSZone *)zone
+{
+    KRRBFNet *_net = [[KRRBFNet alloc] init];
+    _net.features  = [_features mutableCopy];
+    _net.indexKey  = _indexKey ? [_indexKey copy] : nil;
+    _net.bias      = _bias;
+    return _net;
 }
 
 @end

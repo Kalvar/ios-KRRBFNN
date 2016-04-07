@@ -12,13 +12,13 @@
 #import "KRRBFRandom.h"
 
 // 中心點選取方法
-@interface KRRBFCenterChoice : NSObject
+@interface KRRBFChoice : NSObject
 
 @property (nonatomic, strong) NSMutableArray *patterns;
 @property (nonatomic, strong) KRRBFOLS *ols;
 @property (nonatomic, strong) KRRBFRandom *random;
 
-+(instancetype)sharedChoose;
++(instancetype)sharedChoice;
 -(instancetype)init;
 
 @end
