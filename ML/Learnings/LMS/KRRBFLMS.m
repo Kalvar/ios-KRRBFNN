@@ -45,16 +45,39 @@
     return (_maxDistance >= 0.0f) ? _maxDistance / sqrt([_centers count]) : 0.0f;
 }
 
--(NSArray <NSNumber *> *)_calculatePhiWithCenters:(NSArray <KRRBFCenterNet *> *)_centers patterns:(NSArray <KRRBFPattern *> *)_patterns sigma:(double)_sigma
+// This method is that normally forward network calculation.
+-(NSArray <NSNumber *> *)_calculatePhiWithPatterns:(NSArray <KRRBFPattern *> *)_patterns toCenters:(NSArray <KRRBFCenterNet *> *)_centers
 {
+    // Use centers to calculate that sigma.
+    double _sigma        = [self _calculateSigmaWithCenters:_centers];
+    // That phi[] needs to implement the forward network from patterns to centers.
+    NSMutableArray *_phi = [NSMutableArray new];
+    for ( KRRBFPattern *_pattern in _patterns )
+    {
+        NSMutableArray *_rbfDistances = [NSMutableArray new];
+        for( KRRBFCenterNet *_center in _centers )
+        {
+            double _distance = [self.activeFunction rbf:_pattern.features x2:_center.features sigma:_sigma];
+            [_rbfDistances addObject:[NSNumber numberWithDouble:_distance]];
+        }
+        [_phi addObject:_rbfDistances];
+    }
+    return _phi;
+}
+
+// This method is optimized calculation performance without transpose matrix when we are doing solveEquations,
+// We could save that transpose matrix processing before we use [_mathLib solveEquationsAtMatrix:outputs:].
+-(NSArray <NSNumber *> *)_calculatePhiWithCenters:(NSArray <KRRBFCenterNet *> *)_centers toPatterns:(NSArray <KRRBFPattern *> *)_patterns
+{
+    double _sigma        = [self _calculateSigmaWithCenters:_centers];
     NSMutableArray *_phi = [NSMutableArray new];
     for( KRRBFCenterNet *_center in _centers )
     {
         NSMutableArray *_rbfDistances = [NSMutableArray new];
-        for( KRRBFPattern *_pattern in _patterns )
+        for ( KRRBFPattern *_pattern in _patterns )
         {
             double _distance = [self.activeFunction rbf:_center.features x2:_pattern.features sigma:_sigma];
-            [_rbfDistances addObject:[NSNumber numberWithDouble:_distance]]; // phi(j,i)
+            [_rbfDistances addObject:[NSNumber numberWithDouble:_distance]];
         }
         [_phi addObject:_rbfDistances];
     }
@@ -90,21 +113,26 @@
 // 使用最小平方法求權重(LMS)
 -(NSArray *)weightsWithCenters:(NSArray <KRRBFCenterNet *> *)_centers patterns:(NSArray <KRRBFPattern *> *)_patterns targets:(NSArray <KRRBFTarget *> *)_targets
 {
-    double _sigma = [self _calculateSigmaWithCenters:_centers];
-    NSArray *_phi = [self _calculatePhiWithCenters:_centers patterns:_patterns sigma:_sigma];
-    
-    // 對 1 個 期望輸出 就要解 1 次聯立，來算出所有的 centers outputs 在到該 target output 時的所有權重線為多少，
+    // 對 1 個 期望輸出，就要解 1 次聯立，來算出所有的 centers outputs 在到該 target output 時的所有權重線為多少，
     // 所以，有 10 個輸出，就要解 10 次的聯立 (效能超差)。比較好的作法還是用 SGA 來做迭代修正參數，這樣在多輸出的情況下也不用擔心效能太差。
-    // 這裡還是把 LMS 補完，再來寫 SGA -> 最後是 Random Choice
+    
+    // # 效能改進方法 (已實作) :
+    //   如果不想讓 MathLib solveEquationsAtMatrix:outputs: 的部份要對 _phi 多做 1 次的轉置矩陣 (取消轉置)，
+    //   那就要在使用 _calculatePhiWithPatterns:toCenters: 計算 Phi 的時候，
+    //   要從 Patterns to Centers 反過來改成 Centers to Patterns (_calculatePhiWithCenters:toPatterns:)，以中心點為主要對象，
+    //   先將同樣中心點所對應到的所有 Patterns 的 phi value，都集中在同一個 Array 裡，這樣就能做到預先轉置矩陣的效果了。
+    //NSArray *_phi            = [self _calculatePhiWithCenters:_centers toPatterns:_patterns;
+    
+    // # 最後決定 :
+    //   先保留原公式算法，以便於後人在參照公式的行為上，能保持一致性，之後如有 Performance 需求，再用上述方法優化即可。
+    NSArray *_phi            = [self _calculatePhiWithPatterns:_patterns toCenters:_centers];
     NSMutableArray *_weights = [NSMutableArray new];
     for( KRRBFTarget *_targetOutput in _targets )
     {
-        //Crashed here, it seems _targetOutput.sameSequences that dimesions are not match parameters ... ?
-        
-        NSArray *_targetWeights = [_mathLib solveEquationsAtMatrix:_phi outputs:_targetOutput.sameSequences];
+        // 先解 Output 1, 再解 Output 2 ... 其它類推
+        NSArray *_targetWeights = [_mathLib solveEquationsAtMatrix:_phi outputs:@[_targetOutput.sameSequences]];
         [_weights addObject:_targetWeights];
     }
-    
     return _weights;
 }
 

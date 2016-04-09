@@ -128,16 +128,16 @@
         for( NSArray *_bRows in _childMatrix )
         {
             NSInteger _index = 0;
-            float _sum       = 0.0f;
+            double _sum      = 0.0f;
             for( NSNumber *_bValue in _bRows )
             {
                 NSNumber *_tValue  = [_tRows objectAtIndex:_index];
-                _sum              += [_tValue floatValue] * [_bValue floatValue];
-                //NSLog(@"%f x %f", [_tValue floatValue], [_bValue floatValue]);
+                _sum              += [_tValue doubleValue] * [_bValue doubleValue];
+                //NSLog(@"%f x %f", [_tValue doubleValue], [_bValue doubleValue]);
                 ++_index;
             }
             //NSLog(@"_sum %f \n\n", _sum);
-            [_sumRows addObject:[NSNumber numberWithFloat:_sum]];
+            [_sumRows addObject:[NSNumber numberWithDouble:_sum]];
         }
         [_combinedMatrix addObject:_sumRows];
     }
@@ -146,9 +146,7 @@
 
 -(NSMutableArray *)transposeMatrix:(NSArray *)_matrix
 {
-    /*
-     * @ 多維陣列要用多個 Array 互包來完成
-     */
+    // 多維陣列要用多個 Array 互包來完成
     if( !_matrix ) return nil;
     NSMutableArray *_transposedMatrix = [[NSMutableArray alloc] initWithCapacity:0];
     NSInteger _xCount = [_matrix count];
@@ -196,7 +194,6 @@
 @end
 
 @implementation KRMathLib (fixEquations)
-
 // 使用最小平方法來求方陣解聯立
 // Solves that simultaneous equations
 -(NSMutableArray <NSNumber *> *)solveEquationsAtMatrix:(NSArray *)_matrix outputs:(NSArray *)_outputs
@@ -205,10 +202,10 @@
     
     // Formula is ( B^T x B )^-1 x B^T x Yn
     NSMutableArray *_transposedMatrix = [self transposeMatrix:_matrix];
-    // 因為陣列取值的順序關係，用同一個轉置矩陣互乘運算即可達到同樣效果，但在手解式上就不能這麼做
     // Doing ( B^T x B )
+    // 因為陣列取值的順序關係，用同一個轉置矩陣互乘運算即可達到同樣效果，但在手解式上就不能這麼做
+    // Ex : [20 x 5] x [5 x 20] = [20 x 20]
     NSMutableArray *_squareMatrixes   = [self multiplyMatrix:_transposedMatrix anotherMatrix:_transposedMatrix];
-    
     // Doing (B^T x Yn)
     NSMutableArray *_bxY              = [self multiplyMatrix:_transposedMatrix anotherMatrix:_outputs];
     NSArray *_yN                      = [[self transposeMatrix:_bxY] firstObject];
@@ -247,11 +244,11 @@
         
         la_object_t vector = la_matrix_from_double_buffer(buffer2, bRows, bCols, bCols, LA_NO_HINT, LA_ATTRIBUTE_ENABLE_LOGGING);
         
-        //解出來的聯立解
+        // 解出來的聯立解
         la_object_t solvedMatrix = la_solve(matrix, vector);
         double solvedBuffer[ bRows * bCols ];
         
-        //從Matrix物件 轉回 double[]
+        // 從Matrix物件 轉回 double[]
         la_status_t status = la_matrix_to_double_buffer(solvedBuffer, 1, solvedMatrix);
         
         if (status == LA_SUCCESS)
@@ -261,11 +258,6 @@
             {
                 [_solvedEquations addObject:[NSNumber numberWithDouble:solvedBuffer[i]]];
             }
-            //NSLog(@"success: a:%f, b2:%f, b3:%f, b4:%f, b5:%f", solvedBuffer[0], solvedBuffer[1], solvedBuffer[2], solvedBuffer[3], solvedBuffer[4]);
-        }
-        else
-        {
-            //NSLog(@"Wrong");
         }
         
     }

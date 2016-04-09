@@ -77,7 +77,7 @@
     //NSLog(@"_targets : %@", _targets);
     
     KRRBFOLS *ols = [KRRBFChoice sharedChoice].ols;
-    ols.tolerance = 0.999f; // = 一般 NN 的 0.001 收斂誤差
+    ols.tolerance = 0.8f; // = 一般 NN 的 0.2 收斂誤差
     
     // OLS 選取中心點
     NSArray <KRRBFCenterNet *> *choseCenters = [ols chooseWithPatterns:_patterns targets:_targets];
@@ -85,51 +85,7 @@
     NSArray *_newWeights = [[KRRBFLMS sharedLMS] weightsWithCenters:choseCenters patterns:_patterns targets:_targets];
     
     NSLog(@"_newWeights : %@", _newWeights);
-    
-   /*
-# 有幾個實作想法 :
-    1. 把 2 個權重修正方法分開寫 :
-    - a). 在 OLS 這支 class 裡寫「最小平方法 (LMS)」求權重
-    - b). 另外再寫一支 SGA 來修正權重
-    2. 有幾種用法 :
-    - a). OLS 選中心點 -> 用 LMS 解聯立直接求出權重結果 -> 再用 SGA 來做後續修正提昇精度
-    - b). OLS 選中心點 -> 亂數給權重 (-0.25 ~ 0.25) -> 再用 SGA 來做修正
-    - c). Random 選中心點 -> 用 LMS 解聯立直接求出權重結果 -> 再用 SGA 來做後續修正提昇精度
-    - d). Random 選中心點 -> 亂數給權重 (-0.25 ~ 0.25) -> 再用 SGA 來做修正
-    
-    05/04/2016 已決定以 a ~ d 的方法來實作。
-    
-    
-    // LMS 求權重
-    KRRBFLMS *lms    = [KRRBFLMS sharedLMS];
-    NSArray *weights = [lms weightsWithCenters:choseCenters];
-    
-    
-    
-# Continue testing steps :
-    
-    1). 實作 5.4.1 的「利用最小平方法求得權重向量」 (用最小平方法求權重)
-    
-    NSDictionary *_results = [self _calculateDistancesFromCenters:_choseCenters];
-    NSNumber *_maxDistance = [self _getMaxDistanceByResults:_results];
-    double _sigma          = [_maxDistance doubleValue] / sqrt([_patterns count]);
-    
-    NSLog(@"_sigma : %lf", _sigma);
-    
-    在這裡跑 P.186 先算所有 Patterns 到 Chose Centers 的 Phi (RBF 值)後，再一次解聯立方程式求出最初始要設定的 Weights*
-    
-    之後再用 Weights 來計算網路推估值
-    
-    最後再算這次的 RMSE，即完成 OLS 的完整階段算法
-    
-    
-    
-    2). 之後再試驗 5.4.2 的 SGA 方法來修重各個參數的實作
-    
-    SGA 會修 3 個參數，而初始的所有參數值都亂數給即可 ( -0.25 ~ 0.25 )
-    
-    */
-    
+   
 }
 
 - (void)viewDidLoad {
