@@ -10,4 +10,24 @@
 
 @implementation KRRBFSGA
 
++(instancetype)sharedSGA
+{
+    static dispatch_once_t pred;
+    static KRRBFSGA *_object = nil;
+    dispatch_once(&pred, ^{
+        _object = [[KRRBFSGA alloc] init];
+    });
+    return _object;
+}
+
+-(instancetype)init
+{
+    self = [super init];
+    if( self )
+    {
+        
+    }
+    return self;
+}
+
 @end

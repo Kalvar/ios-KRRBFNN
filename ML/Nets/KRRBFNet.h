@@ -12,7 +12,7 @@
 
 @property (nonatomic, strong) NSMutableArray *features; // 特幑向量
 @property (nonatomic, strong) NSNumber *indexKey;       // 第幾筆資料或第幾顆神經元
-@property (nonatomic, assign) double bias;              // 偏權值
+@property (nonatomic, assign) double bias;              // 偏權值, default is nothing
 
 -(instancetype)init;
 -(void)addFeatures:(NSArray *)_f;

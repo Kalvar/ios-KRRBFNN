@@ -10,4 +10,7 @@
 
 @interface KRRBFSGA : NSObject
 
++(instancetype)sharedSGA;
+-(instancetype)init;
+
 @end

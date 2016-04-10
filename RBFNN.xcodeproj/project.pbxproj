@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		8E2C40E81CB1237F00ADB0AB /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E2C40E71CB1237F00ADB0AB /* Accelerate.framework */; };
 		8E2C41171CB5695A00ADB0AB /* KRRBFActiviation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E2C40EC1CB5695A00ADB0AB /* KRRBFActiviation.m */; };
-		8E2C41181CB5695A00ADB0AB /* KRRBFChoice.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E2C40EF1CB5695A00ADB0AB /* KRRBFChoice.m */; };
 		8E2C411A1CB5695A00ADB0AB /* KRRBFOLS.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E2C40F51CB5695A00ADB0AB /* KRRBFOLS.m */; };
 		8E2C411B1CB5695A00ADB0AB /* KRRBFTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E2C40F81CB5695A00ADB0AB /* KRRBFTarget.m */; };
 		8E2C411C1CB5695A00ADB0AB /* KRRBFRandom.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E2C40FB1CB5695A00ADB0AB /* KRRBFRandom.m */; };
@@ -35,8 +34,6 @@
 		8E2C40E71CB1237F00ADB0AB /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		8E2C40EB1CB5695A00ADB0AB /* KRRBFActiviation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KRRBFActiviation.h; sourceTree = "<group>"; };
 		8E2C40EC1CB5695A00ADB0AB /* KRRBFActiviation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KRRBFActiviation.m; sourceTree = "<group>"; };
-		8E2C40EE1CB5695A00ADB0AB /* KRRBFChoice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KRRBFChoice.h; sourceTree = "<group>"; };
-		8E2C40EF1CB5695A00ADB0AB /* KRRBFChoice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KRRBFChoice.m; sourceTree = "<group>"; };
 		8E2C40F41CB5695A00ADB0AB /* KRRBFOLS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KRRBFOLS.h; sourceTree = "<group>"; };
 		8E2C40F51CB5695A00ADB0AB /* KRRBFOLS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KRRBFOLS.m; sourceTree = "<group>"; };
 		8E2C40F71CB5695A00ADB0AB /* KRRBFTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KRRBFTarget.h; sourceTree = "<group>"; };
@@ -112,8 +109,6 @@
 		8E2C40ED1CB5695A00ADB0AB /* Choices */ = {
 			isa = PBXGroup;
 			children = (
-				8E2C40EE1CB5695A00ADB0AB /* KRRBFChoice.h */,
-				8E2C40EF1CB5695A00ADB0AB /* KRRBFChoice.m */,
 				8E2C40F01CB5695A00ADB0AB /* KRRBFOLS */,
 				8E2C40F91CB5695A00ADB0AB /* KRRBFRandom */,
 			);
@@ -388,7 +383,6 @@
 				8E2C41221CB5695A00ADB0AB /* KRRBFOutputNet.m in Sources */,
 				8E58EA111C2A8EE0002BD8E6 /* main.m in Sources */,
 				8E2C41201CB5695A00ADB0AB /* KRRBFCenterNet.m in Sources */,
-				8E2C41181CB5695A00ADB0AB /* KRRBFChoice.m in Sources */,
 				8E2C411F1CB5695A00ADB0AB /* KRRBFOutputLayer.m in Sources */,
 				8E2C41171CB5695A00ADB0AB /* KRRBFActiviation.m in Sources */,
 				8E2C411D1CB5695A00ADB0AB /* KRRBFNN.m in Sources */,

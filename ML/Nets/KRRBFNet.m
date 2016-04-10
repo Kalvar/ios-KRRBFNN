@@ -34,7 +34,7 @@
 -(instancetype)copyWithZone:(NSZone *)zone
 {
     KRRBFNet *_net = [[KRRBFNet alloc] init];
-    _net.features  = [_features mutableCopy];
+    _net.features  = [[NSMutableArray alloc] initWithArray:_features copyItems:YES]; // Whole deeply copying
     _net.indexKey  = _indexKey ? [_indexKey copy] : nil;
     _net.bias      = _bias;
     return _net;

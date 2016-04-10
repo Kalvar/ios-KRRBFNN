@@ -194,7 +194,7 @@
 @end
 
 @implementation KRMathLib (fixEquations)
-// 使用最小平方法來求方陣解聯立
+// 使用最小平方法(LMS)來求方陣解聯立
 // Solves that simultaneous equations
 -(NSMutableArray <NSNumber *> *)solveEquationsAtMatrix:(NSArray *)_matrix outputs:(NSArray *)_outputs
 {

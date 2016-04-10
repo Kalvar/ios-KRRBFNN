@@ -113,8 +113,9 @@
 // 使用最小平方法求權重(LMS)
 -(NSArray *)weightsWithCenters:(NSArray <KRRBFCenterNet *> *)_centers patterns:(NSArray <KRRBFPattern *> *)_patterns targets:(NSArray <KRRBFTarget *> *)_targets
 {
-    // 對 1 個 期望輸出，就要解 1 次聯立，來算出所有的 centers outputs 在到該 target output 時的所有權重線為多少，
-    // 所以，有 10 個輸出，就要解 10 次的聯立 (效能超差)。比較好的作法還是用 SGA 來做迭代修正參數，這樣在多輸出的情況下也不用擔心效能太差。
+    // # Notes :
+    //   對 1 個 期望輸出，就要解 1 次聯立，來算出所有的 centers outputs 在到該 target output 時的所有權重線為多少，
+    //   所以，有 10 個輸出，就要解 10 次的聯立 (效能超差)。比較好的作法還是用 SGA 來做迭代修正參數，這樣在多輸出的情況下也不用擔心效能太差。
     
     // # 效能改進方法 (已實作) :
     //   如果不想讓 MathLib solveEquationsAtMatrix:outputs: 的部份要對 _phi 多做 1 次的轉置矩陣 (取消轉置)，
