@@ -8,6 +8,7 @@
 
 #import "KRRBFNN.h"
 #import "KRRBFTarget.h"
+#import "KRRBFOutputLayer.h"
 
 @implementation KRRBFNN (trainingSteps)
 
@@ -59,11 +60,9 @@
     {
         _patterns           = [NSMutableArray new];
         _targets            = [NSMutableArray new];
-        _centers            = [NSMutableArray new];
-        _weights            = [NSMutableArray new];
         
-        //_centerChoiceMethod = KRRBFNNCenterChoiceOLS;
-        //_learningMethod     = KRRBFNNLearningLMS;
+        _hiddenLayer        = [KRRBFHiddenLayer sharedLayer];
+        _outputLayer        = [KRRBFOutputLayer sharedLayer];
     }
     return self;
 }
@@ -96,8 +95,7 @@
     NSArray *_choseCenters = [self.ols chooseWithPatterns:_patterns targets:_targets];
     if( _setToCenters )
     {
-        [_centers removeAllObjects];
-        [_centers addObjectsFromArray:_choseCenters];
+        [_hiddenLayer addCentersFromArray:_choseCenters];
     }
     return _choseCenters;
 }
@@ -119,14 +117,21 @@
     {
         [self _createTargetsWithPatterns:_patterns];
     }
+    
     // LMS 解聯立一次即求得最佳權重
-    NSArray *_newWeights = [self.lms weightsWithCenters:_centers patterns:_patterns targets:_targets];
-    [_weights removeAllObjects];
-    [_weights addObjectsFromArray:_newWeights];
-    if( _completion )
-    {
-        _completion(YES, self);
-    }
+    NSArray *_outputWeights = [self.lms outputWeightsWithCenters:self.centers patterns:_patterns targets:_targets];
+    [_outputLayer addNetsFromArray:_outputWeights];
+    [_outputLayer outputWithPatterns:_patterns centers:self.centers eachOutput:^(KRRBFOutputNet *outputNet) {
+        NSLog(@"net(%@) the output is %f and target is %f", outputNet.indexKey, outputNet.outputValue, outputNet.targetValue);
+    } completion:^(double rmse) {
+        NSLog(@"rmse : %f", rmse);
+        if( _completion )
+        {
+            _completion(YES, self);
+        }
+    }];
+    
+    //NSLog(@"_weights : %@", self.weights);
 }
 
 -(void)trainingBySGAWithCompletion:(KRRBFNNCompletion)_completion
@@ -135,7 +140,7 @@
     // 跑迭代運算，這裡會不斷的被遞迴直至收斂 (使用 RMSE)
 }
 
-#pragma --mark Getters
+#pragma --mark Getters Learning Methods
 -(KRRBFOLS *)ols
 {
     if( nil == _ols )
@@ -172,6 +177,51 @@
     return _sga;
 }
 
+#pragma --mark Getters Parameters
+-(NSArray <KRRBFCenterNet *> *)centers
+{
+    if( _hiddenLayer )
+    {
+        return _hiddenLayer.nets;
+    }
+    return nil;
+}
 
+-(NSArray <KRRBFOutputNet *> *)weights
+{
+    if( _outputLayer )
+    {
+        return _outputLayer.nets;
+    }
+    return nil;
+}
+
+
+
+// 使用 OLS / LMS 都要在進行 Training 之前先建立 KRRBFTargets
+-(void)createTargets
+{
+    
+    /*
+# 有幾個實作想法 :
+    1. 把 2 個權重修正方法分開寫 :
+    - a). 寫一支 class 用「最小平方法 (LMS)」求權重
+    - b). 再寫一支 class 用 SGA 來修正權重
+    2. 有幾種用法 :
+    - a). OLS 選中心點 -> 用 LMS 解聯立直接求出權重結果 -> 再用 SGA 來做後續修正提昇精度
+    - b). OLS 選中心點 -> 亂數給權重 (-0.25 ~ 0.25) -> 再用 SGA 來做修正
+    - c). Random 選中心點 -> 用 LMS 解聯立直接求出權重結果 -> 再用 SGA 來做後續修正提昇精度
+    - d). Random 選中心點 -> 亂數給權重 (-0.25 ~ 0.25) -> 再用 SGA 來做修正
+    
+    05/04/2016 已決定以 a ~ d 的方法來實作。
+    
+# RBFNN 使用方法 :
+    - Recall weights (實作儲存訓練好的 weights，和回復訓練好的 weights)
+    - Recall centers (實作儲存訓練好/挑好的 centers，和回復訓練好的 centerss)
+    - 原來有幾個輸出，就要用回幾個輸出 (跟一般的 NN 一樣)
+    
+    */
+
+}
 
 @end

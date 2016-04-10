@@ -47,6 +47,8 @@
             [p addTarget:( arc4random() % targetScope )];
         }
         
+        //NSLog(@"p(%@).targets : %@", p.indexKey, p.targets);
+        
         [network addPattern:p];
     }
     

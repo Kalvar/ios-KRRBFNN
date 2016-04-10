@@ -8,6 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
+@class KRRBFCenterNet;
+
 @interface KRRBFHiddenLayer : NSObject
+
+@property (nonatomic, strong) NSMutableArray <KRRBFCenterNet *> *nets; // Net is center
+
++(instancetype)sharedLayer;
+-(instancetype)init;
+
+-(void)removeAllCenters;
+-(void)addCentersFromArray:(NSArray <KRRBFCenterNet *> *)choseCenters;
 
 @end

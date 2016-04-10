@@ -50,7 +50,7 @@
 }
 
 //#define NumberArray NSArray<NSNumber *>
--(NSMutableArray <NSNumber *> *)_calculatePhiWithCenters:(NSArray <KRRBFPattern *> *)_centers patterns:(NSArray <KRRBFPattern *> *)_patterns sigma:(double)_sigma
+-(NSMutableArray *)_calculatePhiWithCenters:(NSArray <KRRBFPattern *> *)_centers patterns:(NSArray <KRRBFPattern *> *)_patterns sigma:(double)_sigma
 {
     // 用算好的 Sigma 和活化函式來重新運算每一筆 Pattern 和 Centers 之間的距離 (RBF, phi)
     NSMutableArray *_phi = [NSMutableArray new];

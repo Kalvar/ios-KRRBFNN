@@ -10,6 +10,7 @@
 
 @class KRRBFPattern;
 @class KRRBFCenterNet;
+@class KRRBFOutputNet;
 @class KRRBFTarget;
 
 @interface KRRBFLMS : NSObject
@@ -17,6 +18,6 @@
 +(instancetype)sharedLMS;
 -(instancetype)init;
 
--(NSArray *)weightsWithCenters:(NSArray <KRRBFCenterNet *> *)_centers patterns:(NSArray <KRRBFPattern *> *)_patterns targets:(NSArray <KRRBFTarget *> *)_targets;
+-(NSArray <KRRBFOutputNet *> *)outputWeightsWithCenters:(NSArray <KRRBFCenterNet *> *)_centers patterns:(NSArray <KRRBFPattern *> *)_patterns targets:(NSArray <KRRBFTarget *> *)_targets;
 
 @end

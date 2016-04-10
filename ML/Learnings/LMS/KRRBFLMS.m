@@ -9,6 +9,7 @@
 #import "KRRBFLMS.h"
 #import "KRRBFPattern.h"
 #import "KRRBFCenterNet.h"
+#import "KRRBFOutputNet.h"
 #import "KRRBFTarget.h"
 #import "KRRBFActiviation.h"
 #import "KRMathLib.h"
@@ -46,7 +47,7 @@
 }
 
 // This method is that normally forward network calculation.
--(NSArray <NSNumber *> *)_calculatePhiWithPatterns:(NSArray <KRRBFPattern *> *)_patterns toCenters:(NSArray <KRRBFCenterNet *> *)_centers
+-(NSArray *)_calculatePhiWithPatterns:(NSArray <KRRBFPattern *> *)_patterns toCenters:(NSArray <KRRBFCenterNet *> *)_centers
 {
     // Use centers to calculate that sigma.
     double _sigma        = [self _calculateSigmaWithCenters:_centers];
@@ -67,7 +68,7 @@
 
 // This method is optimized calculation performance without transpose matrix when we are doing solveEquations,
 // We could save that transpose matrix processing before we use [_mathLib solveEquationsAtMatrix:outputs:].
--(NSArray <NSNumber *> *)_calculatePhiWithCenters:(NSArray <KRRBFCenterNet *> *)_centers toPatterns:(NSArray <KRRBFPattern *> *)_patterns
+-(NSArray *)_calculatePhiWithCenters:(NSArray <KRRBFCenterNet *> *)_centers toPatterns:(NSArray <KRRBFPattern *> *)_patterns
 {
     double _sigma        = [self _calculateSigmaWithCenters:_centers];
     NSMutableArray *_phi = [NSMutableArray new];
@@ -111,7 +112,7 @@
 
 #pragma --mark Learning Methods
 // 使用最小平方法求權重(LMS)
--(NSArray *)weightsWithCenters:(NSArray <KRRBFCenterNet *> *)_centers patterns:(NSArray <KRRBFPattern *> *)_patterns targets:(NSArray <KRRBFTarget *> *)_targets
+-(NSArray <KRRBFOutputNet *> *)outputWeightsWithCenters:(NSArray <KRRBFCenterNet *> *)_centers patterns:(NSArray <KRRBFPattern *> *)_patterns targets:(NSArray <KRRBFTarget *> *)_targets
 {
     // # Notes :
     //   對 1 個 期望輸出，就要解 1 次聯立，來算出所有的 centers outputs 在到該 target output 時的所有權重線為多少，
@@ -128,11 +129,18 @@
     //   先保留原公式算法，以便於後人在參照公式的行為上，能保持一致性，之後如有 Performance 需求，再用上述方法優化即可。
     NSArray *_phi            = [self _calculatePhiWithPatterns:_patterns toCenters:_centers];
     NSMutableArray *_weights = [NSMutableArray new];
+    NSInteger _outputIndex   = -1;
     for( KRRBFTarget *_targetOutput in _targets )
     {
+        _outputIndex              += 1;
         // 先解 Output 1, 再解 Output 2 ... 其它類推
-        NSArray *_targetWeights = [_mathLib solveEquationsAtMatrix:_phi outputs:@[_targetOutput.sameSequences]];
-        [_weights addObject:_targetWeights];
+        NSArray *_targetWeights    = [_mathLib solveEquationsAtMatrix:_phi outputs:@[_targetOutput.sameSequences]];
+        
+        KRRBFOutputNet *_outputNet = [[KRRBFOutputNet alloc] init];
+        _outputNet.indexKey        = @(_outputIndex); // 第幾個 Output Net
+        [_outputNet addWeightsFromArray:_targetWeights];
+        
+        [_weights addObject:_outputNet];
     }
     return _weights;
 }

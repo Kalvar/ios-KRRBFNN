@@ -7,8 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+
+#import "KRRBFHiddenLayer.h"
+#import "KRRBFOutputLayer.h"
+
 #import "KRRBFPattern.h"
 #import "KRRBFCenterNet.h"
+#import "KRRBFOutputNet.h"
+
 #import "KRRBFOLS.h"
 #import "KRRBFRandom.h"
 #import "KRRBFLMS.h"
@@ -17,29 +23,18 @@
 @class KRRBFTarget;
 @class KRRBFNN;
 
-// 中心點選取方法
-typedef NS_ENUM(NSInteger, KRRBFNNCenterChoices)
-{
-    KRRBFNNCenterChoiceOLS = 0,
-    KRRBFNNCenterChoiceRandom
-};
-
-// 學習方法 (調權重)
-typedef NS_ENUM(NSInteger, KRRBFNNLearning)
-{
-    KRRBFNNLearningLMS = 0,
-    KRRBFNNLearningSGA,
-    KRRBFNNLearningLMSAndSGA
-};
-
 typedef void(^KRRBFNNCompletion)(BOOL success, KRRBFNN *rbfnn);
 
 @interface KRRBFNN : NSObject
 
 @property (nonatomic, strong) NSMutableArray <KRRBFPattern *> *patterns;
 @property (nonatomic, strong) NSMutableArray <KRRBFTarget *> *targets;
-@property (nonatomic, strong) NSMutableArray <KRRBFCenterNet *> *centers;
-@property (nonatomic, strong) NSMutableArray *weights;
+
+@property (nonatomic, strong, readonly) NSArray <KRRBFCenterNet *> *centers;
+@property (nonatomic, strong, readonly) NSArray <KRRBFOutputNet *> *weights;
+
+@property (nonatomic, strong) KRRBFHiddenLayer *hiddenLayer;
+@property (nonatomic, strong) KRRBFOutputLayer *outputLayer;
 
 // Center choice methods
 @property (nonatomic, strong) KRRBFOLS *ols;
@@ -48,10 +43,6 @@ typedef void(^KRRBFNNCompletion)(BOOL success, KRRBFNN *rbfnn);
 // Learning methods
 @property (nonatomic, strong) KRRBFLMS *lms;
 @property (nonatomic, strong) KRRBFSGA *sga;
-
-// 暫緩使用這 2 個
-//@property (nonatomic, assign) KRRBFNNCenterChoices centerChoiceMethod;
-//@property (nonatomic, assign) KRRBFNNLearning learningMethod;
 
 +(instancetype)sharedNetwork;
 -(instancetype)init;
