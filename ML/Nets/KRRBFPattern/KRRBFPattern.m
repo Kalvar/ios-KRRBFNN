@@ -36,7 +36,7 @@
 {
     KRRBFPattern *_p = [[KRRBFPattern alloc] init];
     _p.features      = [[NSMutableArray alloc] initWithArray:self.features copyItems:YES]; // copyItems is YES that means whole deeply copying
-    _p.indexKey      = self.indexKey ? [self.indexKey copy] : nil;
+    _p.indexKey      = [self.indexKey copy];
     _p.targets       = [[NSMutableArray alloc] initWithArray:_targets copyItems:YES];
     return _p;
 }

@@ -39,4 +39,33 @@
     }
 }
 
+#pragma --mark NSCopying
+-(instancetype)copyWithZone:(NSZone *)zone
+{
+    KRRBFCenterNet *_net = [[[self class] alloc] init];
+    [_net setFeatures:[[NSMutableArray alloc] initWithArray:self.features copyItems:YES]];
+    [_net setIndexKey:[self.indexKey copy]];
+    return _net;
+}
+
+#pragma --mark NSCoding
+-(void)encodeWithCoder:(NSCoder *)aCoder
+{
+    self.coder = aCoder; // Inherited from parent class.
+    [self encodeObject:self.features forKey:@"features"];
+    [self encodeObject:self.indexKey forKey:@"indexKey"];
+}
+
+-(instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super init];
+    if(self)
+    {
+        self.coder = aDecoder;
+        self.features = [self decodeForKey:@"features"];
+        self.indexKey = [self decodeForKey:@"indexKey"];
+    }
+    return self;
+}
+
 @end

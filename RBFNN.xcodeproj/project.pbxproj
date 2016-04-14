@@ -28,6 +28,8 @@
 		8E58EA1A1C2A8EE0002BD8E6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E58EA181C2A8EE0002BD8E6 /* Main.storyboard */; };
 		8E58EA1C1C2A8EE0002BD8E6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8E58EA1B1C2A8EE0002BD8E6 /* Assets.xcassets */; };
 		8E58EA1F1C2A8EE0002BD8E6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E58EA1D1C2A8EE0002BD8E6 /* LaunchScreen.storyboard */; };
+		8E61E1DB1CBD507300250819 /* KRRBFPassed.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E61E1DA1CBD507300250819 /* KRRBFPassed.m */; };
+		8E61E1DE1CBFE7D100250819 /* KRRBFFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E61E1DD1CBFE7D100250819 /* KRRBFFetcher.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +72,10 @@
 		8E58EA1B1C2A8EE0002BD8E6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8E58EA1E1C2A8EE0002BD8E6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8E58EA201C2A8EE0002BD8E6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8E61E1D91CBD507300250819 /* KRRBFPassed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KRRBFPassed.h; sourceTree = "<group>"; };
+		8E61E1DA1CBD507300250819 /* KRRBFPassed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KRRBFPassed.m; sourceTree = "<group>"; };
+		8E61E1DC1CBFE7D100250819 /* KRRBFFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KRRBFFetcher.h; sourceTree = "<group>"; };
+		8E61E1DD1CBFE7D100250819 /* KRRBFFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KRRBFFetcher.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +98,7 @@
 				8E2C40FE1CB5695A00ADB0AB /* Layers */,
 				8E2C41061CB5695A00ADB0AB /* Learnings */,
 				8E2C41071CB5695A00ADB0AB /* Nets */,
+				8E61E1D81CBD4F2100250819 /* Trained */,
 				8E2C41131CB5695A00ADB0AB /* Utilities */,
 			);
 			path = ML;
@@ -305,6 +312,17 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		8E61E1D81CBD4F2100250819 /* Trained */ = {
+			isa = PBXGroup;
+			children = (
+				8E61E1D91CBD507300250819 /* KRRBFPassed.h */,
+				8E61E1DA1CBD507300250819 /* KRRBFPassed.m */,
+				8E61E1DC1CBFE7D100250819 /* KRRBFFetcher.h */,
+				8E61E1DD1CBFE7D100250819 /* KRRBFFetcher.m */,
+			);
+			path = Trained;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -386,7 +404,9 @@
 				8E2C411F1CB5695A00ADB0AB /* KRRBFOutputLayer.m in Sources */,
 				8E2C41171CB5695A00ADB0AB /* KRRBFActiviation.m in Sources */,
 				8E2C411D1CB5695A00ADB0AB /* KRRBFNN.m in Sources */,
+				8E61E1DB1CBD507300250819 /* KRRBFPassed.m in Sources */,
 				8E2C411B1CB5695A00ADB0AB /* KRRBFTarget.m in Sources */,
+				8E61E1DE1CBFE7D100250819 /* KRRBFFetcher.m in Sources */,
 				8E2C412C1CB56B3300ADB0AB /* KRRBFSGA.m in Sources */,
 				8E2C411A1CB5695A00ADB0AB /* KRRBFOLS.m in Sources */,
 				8E2C41231CB5695A00ADB0AB /* KRRBFPattern.m in Sources */,

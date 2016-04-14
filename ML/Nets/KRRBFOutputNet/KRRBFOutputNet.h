@@ -9,7 +9,7 @@
 #import "KRRBFNet.h"
 
 // Output net
-@interface KRRBFOutputNet : KRRBFNet
+@interface KRRBFOutputNet : KRRBFNet <NSCoding>
 
 @property (nonatomic, strong) NSMutableArray <NSNumber *> *weights; // 連接自己的所有權重值
 @property (nonatomic, assign) double outputValue;                   // 網路輸出值，因為是做線性組合，故網路輸出值即為外部 Hidden Layer Nets 的 sum(z(j) * wj) + bias

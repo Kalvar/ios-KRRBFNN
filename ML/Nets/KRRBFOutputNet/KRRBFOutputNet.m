@@ -52,7 +52,7 @@
         NSNumber *_rbfValue  = [_rbfValues objectAtIndex:_index];
         _sum                += ( [_rbfValue doubleValue] * [_netWeight doubleValue] );
     }
-    _outputValue = _sum;
+    _outputValue = _sum; // Here sets outputValue.
     return _sum;
 }
 
@@ -60,6 +60,35 @@
 -(double)outputError
 {
     return _outputValue - _targetValue;
+}
+
+#pragma --mark NSCopying
+-(instancetype)copyWithZone:(NSZone *)zone
+{
+    KRRBFOutputNet *_net = [[[self class] alloc] init];
+    [_net setWeights:[[NSMutableArray alloc] initWithArray:_weights copyItems:YES]];
+    [_net setIndexKey:[self.indexKey copy]];
+    return _net;
+}
+
+#pragma --mark NSCoding
+-(void)encodeWithCoder:(NSCoder *)aCoder
+{
+    self.coder = aCoder;
+    [self encodeObject:self.weights forKey:@"weights"];
+    [self encodeObject:self.indexKey forKey:@"indexKey"];
+}
+
+-(instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super init];
+    if(self)
+    {
+        self.coder    = aDecoder;
+        self.weights  = [self decodeForKey:@"weights"];
+        self.indexKey = [self decodeForKey:@"indexKey"];
+    }
+    return self;
 }
 
 @end

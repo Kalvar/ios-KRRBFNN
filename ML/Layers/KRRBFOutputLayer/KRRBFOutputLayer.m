@@ -82,7 +82,7 @@
     [_nets addObjectsFromArray:_outputNets];
 }
 
--(void)outputWithPatterns:(NSArray <KRRBFPattern *> *)_patterns centers:(NSArray <KRRBFCenterNet *> *)_centers eachOutput:(KRRBFOutputLayerOutput)_eachOutput completion:(KRRBFOutputLayerCompletion)_completion
+-(void)outputWithPatterns:(NSArray <KRRBFPattern *> *)_patterns centers:(NSArray <KRRBFCenterNet *> *)_centers completion:(KRRBFOutputLayerCompletion)_completion eachOutput:(KRRBFOutputLayerOutput)_eachOutput
 {
     double _sigma      = [self _calculateSigmaWithCenters:_centers];
     double _errorValue = 0.0f;
@@ -100,10 +100,11 @@
         for( KRRBFOutputNet *_outputNet in _nets )
         {
             _outputIndex            += 1;
+            // Network output value
+            [_outputNet outputWithRBFValues:_rbfValues];
             // The target-output of pattern
             NSNumber *_patternTarget = [_pattern.targets objectAtIndex:_outputIndex];
             _outputNet.targetValue   = [_patternTarget doubleValue];
-            [_outputNet outputWithRBFValues:_rbfValues];
             // MSE
             _errorValue             += _outputNet.outputError * _outputNet.outputError;
             if( _eachOutput )
@@ -111,7 +112,7 @@
                 _eachOutput(_outputNet);
             }
         }
-        NSLog(@"\n\n");
+        //NSLog(@"\n\n");
     }
     
     // RMSE
@@ -119,6 +120,36 @@
     if( _completion )
     {
         _completion(_errorValue);
+    }
+}
+
+-(void)predicateWithPatterns:(NSArray<KRRBFPattern *> *)_patterns centers:(NSArray<KRRBFCenterNet *> *)_centers outputs:(KRRBFOutputLayerPredication)_outputsBlock
+{
+    NSMutableDictionary *_predications = [NSMutableDictionary new];
+    double _sigma = [self _calculateSigmaWithCenters:_centers];
+    for ( KRRBFPattern *_pattern in _patterns )
+    {
+        NSMutableArray *_rbfValues = [NSMutableArray new];
+        for( KRRBFCenterNet *_center in _centers )
+        {
+            double _rbfValue = [self.activeFunction rbf:_pattern.features x2:_center.features sigma:_sigma];
+            [_rbfValues addObject:[NSNumber numberWithDouble:_rbfValue]];
+        }
+        
+        // Predicated outputs of each pattern.
+        NSMutableArray *_outputs = [NSMutableArray new];
+        for( KRRBFOutputNet *_outputNet in _nets )
+        {
+            [_outputs addObject:[NSNumber numberWithDouble:[_outputNet outputWithRBFValues:_rbfValues]]];
+        }
+        
+        // Uses pattern.indexKey to record its outputs of predication.
+        [_predications setObject:_outputs forKey:_pattern.indexKey];
+    }
+    
+    if( _outputsBlock )
+    {
+        _outputsBlock(_predications);
     }
 }
 

@@ -9,6 +9,36 @@
 #import "KRRBFNN.h"
 #import "KRRBFTarget.h"
 #import "KRRBFOutputLayer.h"
+#import "KRRBFFetcher.h"
+
+/*
+ # 有幾個實作想法 :
+     1. 把 2 個權重修正方法分開寫 :
+     - a). 寫一支 class 用「最小平方法 (LMS)」求權重
+     - b). 再寫一支 class 用 SGA 來修正權重
+     2. 有幾種用法 :
+     - a). OLS 選中心點 -> 用 LMS 解聯立直接求出權重結果 -> 再用 SGA 來做更深層的後續修正，以提昇精度
+     - b). OLS 選中心點 -> 亂數給權重 (-0.25 ~ 0.25) -> 再用 SGA 來做修正
+     - c). Random 選中心點 -> 用 LMS 解聯立直接求出權重結果 -> 再用 SGA 來做後續修正提昇精度
+     - d). Random 選中心點 -> 亂數給權重 (-0.25 ~ 0.25) -> 再用 SGA 來做修正
+ 
+     05/04/2016 已決定以 a ~ d 的方法來實作。
+ 
+ # RBFNN 使用方法 :
+     - Recall weights (實作儲存訓練好的 weights，和回復訓練好的 weights)
+     - Recall centers (實作儲存訓練好/挑好的 centers，和回復訓練好的 centerss)
+     - 原來有幾個特徵值與輸出，就要用回幾個特徵值與輸出 (跟一般的 NN 一樣)，否則就要重新訓練網路
+ 
+ # RBFNN that training is 2 steps :
+     - 1. To choose initial centers
+     - 2. To calculate weights
+ */
+
+@interface KRRBFNN ()
+
+@property (nonatomic, strong) KRRBFFetcher *fetcher;
+
+@end
 
 @implementation KRRBFNN (trainingSteps)
 
@@ -63,10 +93,44 @@
         
         _hiddenLayer        = [KRRBFHiddenLayer sharedLayer];
         _outputLayer        = [KRRBFOutputLayer sharedLayer];
+        
+        _rmse               = 0.0f;
+        
+        _fetcher            = [KRRBFFetcher sharedFetcher];
     }
     return self;
 }
 
+#pragma --mark Recover / Other Methods
+-(void)recoverForKey:(NSString *)_key
+{
+    KRRBFPassed *_savedNetwork = [_fetcher objectForKey:_key];
+    _hiddenLayer.nets          = _savedNetwork.centers;
+    _outputLayer.nets          = _savedNetwork.weights;
+}
+
+-(void)removeForKey:(NSString *)_key
+{
+    [_fetcher removeForKey:_key];
+}
+
+-(void)saveForKey:(NSString *)_key
+{
+    KRRBFPassed *_trainedNetwork = [KRRBFPassed new];
+    _trainedNetwork.centers      = self.centers;
+    _trainedNetwork.weights      = self.weights;
+    [_fetcher save:_trainedNetwork forKey:_key];
+}
+
+-(void)reset
+{
+    [_targets removeAllObjects];
+    [_hiddenLayer removeAllCenters];
+    [_outputLayer removeAllNets];
+    _rmse = 0.0f;
+}
+
+#pragma --mark Patterns
 -(void)addPattern:(KRRBFPattern *)_pattern
 {
     [_patterns addObject:_pattern];
@@ -78,40 +142,54 @@
 }
 
 #pragma --mark Training Methods
-// RBFNN that training is 2 steps :
-// 1. To choose initial centers
-// 2. To calculate weights
-
 /*
  * @ Use OLS method to choose initial centers
  *   - (1.0f - _tolerance) is 一般 NN 的收斂誤差
  *   - returns chose centers by OLS
+ *
+ * @ Parameters
+ *   - toSave means to record this chose centers in HiddenLayer as same as self.centers.
  */
--(NSArray <KRRBFCenterNet *> *)pickingCentersByOLSWithTolerance:(double)_tolerance setToCenters:(BOOL)_setToCenters
+-(NSArray <KRRBFCenterNet *> *)pickCentersByOLSWithTolerance:(double)_tolerance toSave:(BOOL)_toSave
 {
+    // 使用 OLS / LMS 都要在進行 Training 之前先建立 KRRBFTargets
     [self _createTargetsWithPatterns:_patterns];
     self.ols.tolerance = _tolerance;
     // OLS 選取中心點
     NSArray *_choseCenters = [self.ols chooseWithPatterns:_patterns targets:_targets];
-    if( _setToCenters )
+    if( _toSave )
     {
         [_hiddenLayer addCentersFromArray:_choseCenters];
     }
     return _choseCenters;
 }
 
+-(NSArray <KRRBFCenterNet *> *)pickCentersByOLSWithTolerance:(double)_tolerance
+{
+    // Default is saving chose centers in HiddenLayer.
+    return [self pickCentersByOLSWithTolerance:_tolerance toSave:YES];
+}
+
 /*
  * @ Use Random method to choose initial centers
  *   - _limitCount is that how many centers we want to pick ?
  *   - returns chose centers by Random
+ *
+ * @ Parameters
+ *   - toSave means to record this chose centers in HiddenLayer as same as self.centers.
  */
--(NSArray <KRRBFCenterNet *> *)pickingCentersByRandomWithLimitCount:(NSInteger)_limitCount setToCenters:(BOOL)_setToCenters
+-(NSArray <KRRBFCenterNet *> *)pickCentersByRandomWithLimitCount:(NSInteger)_limitCount toSave:(BOOL)_toSave
 {
     // TODO:
     return nil;
 }
 
--(void)trainingByLMSWithCompletion:(KRRBFNNCompletion)_completion
+-(NSArray <KRRBFCenterNet *> *)pickCentersByRandomWithLimitCount:(NSInteger)_limitCount
+{
+    return [self pickCentersByRandomWithLimitCount:_limitCount toSave:YES];
+}
+
+-(void)trainLMSWithCompletion:(KRRBFNNCompletion)_completion eachOutput:(KRRBFNNEachOutput)_eachOutput
 {
     if( nil == _targets || [_targets count] == 0 )
     {
@@ -119,25 +197,44 @@
     }
     
     // LMS 解聯立一次即求得最佳權重
-    NSArray *_outputWeights = [self.lms outputWeightsWithCenters:self.centers patterns:_patterns targets:_targets];
+    NSArray <KRRBFOutputNet *> *_outputWeights = [self.lms outputNetsWithCenters:self.centers patterns:_patterns targets:_targets];
     [_outputLayer addNetsFromArray:_outputWeights];
-    [_outputLayer outputWithPatterns:_patterns centers:self.centers eachOutput:^(KRRBFOutputNet *outputNet) {
-        NSLog(@"net(%@) the output is %f and target is %f", outputNet.indexKey, outputNet.outputValue, outputNet.targetValue);
-    } completion:^(double rmse) {
-        NSLog(@"rmse : %f", rmse);
+    [_outputLayer outputWithPatterns:_patterns centers:self.centers completion:^(double rmse) {
+        _rmse = rmse;
         if( _completion )
         {
-            _completion(YES, self);
+            _completion(YES, self, _rmse);
+        }
+    } eachOutput:^(KRRBFOutputNet *outputNet) {
+        if( _eachOutput )
+        {
+            _eachOutput(outputNet);
         }
     }];
-    
-    //NSLog(@"_weights : %@", self.weights);
 }
 
--(void)trainingBySGAWithCompletion:(KRRBFNNCompletion)_completion
+-(void)trainLMSWithCompletion:(KRRBFNNCompletion)_completion
+{
+    [self trainLMSWithCompletion:_completion eachOutput:nil];
+}
+
+-(void)trainSGAWithCompletion:(KRRBFNNCompletion)_completion
 {
     // TODO:
     // 跑迭代運算，這裡會不斷的被遞迴直至收斂 (使用 RMSE)
+}
+
+#pragma --mark Predication Methods
+-(void)predicateWithPatterns:(NSArray <KRRBFPattern *> *)_predicatePatterns output:(KRRBFNNPredication)_outputsBlock
+{
+    [_outputLayer predicateWithPatterns:_predicatePatterns
+                                centers:self.centers
+                                outputs:^(NSDictionary<NSString *,NSArray<NSNumber *> *> *predications) {
+                                    if( _outputsBlock )
+                                    {
+                                        _outputsBlock(predications);
+                                    }
+                                }];
 }
 
 #pragma --mark Getters Learning Methods
@@ -177,8 +274,8 @@
     return _sga;
 }
 
-#pragma --mark Getters Parameters
--(NSArray <KRRBFCenterNet *> *)centers
+#pragma --mark Getters
+-(NSMutableArray <KRRBFCenterNet *> *)centers
 {
     if( _hiddenLayer )
     {
@@ -187,41 +284,13 @@
     return nil;
 }
 
--(NSArray <KRRBFOutputNet *> *)weights
+-(NSMutableArray <KRRBFOutputNet *> *)weights
 {
     if( _outputLayer )
     {
         return _outputLayer.nets;
     }
     return nil;
-}
-
-
-
-// 使用 OLS / LMS 都要在進行 Training 之前先建立 KRRBFTargets
--(void)createTargets
-{
-    
-    /*
-# 有幾個實作想法 :
-    1. 把 2 個權重修正方法分開寫 :
-    - a). 寫一支 class 用「最小平方法 (LMS)」求權重
-    - b). 再寫一支 class 用 SGA 來修正權重
-    2. 有幾種用法 :
-    - a). OLS 選中心點 -> 用 LMS 解聯立直接求出權重結果 -> 再用 SGA 來做後續修正提昇精度
-    - b). OLS 選中心點 -> 亂數給權重 (-0.25 ~ 0.25) -> 再用 SGA 來做修正
-    - c). Random 選中心點 -> 用 LMS 解聯立直接求出權重結果 -> 再用 SGA 來做後續修正提昇精度
-    - d). Random 選中心點 -> 亂數給權重 (-0.25 ~ 0.25) -> 再用 SGA 來做修正
-    
-    05/04/2016 已決定以 a ~ d 的方法來實作。
-    
-# RBFNN 使用方法 :
-    - Recall weights (實作儲存訓練好的 weights，和回復訓練好的 weights)
-    - Recall centers (實作儲存訓練好/挑好的 centers，和回復訓練好的 centerss)
-    - 原來有幾個輸出，就要用回幾個輸出 (跟一般的 NN 一樣)
-    
-    */
-
 }
 
 @end

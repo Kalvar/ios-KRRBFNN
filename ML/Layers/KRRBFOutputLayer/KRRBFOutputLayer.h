@@ -14,6 +14,7 @@
 
 typedef void(^KRRBFOutputLayerOutput)(KRRBFOutputNet *outputNet);
 typedef void(^KRRBFOutputLayerCompletion)(double rmse);
+typedef void(^KRRBFOutputLayerPredication)(NSDictionary <NSString *, NSArray <NSNumber *> *> *predications);
 
 @interface KRRBFOutputLayer : NSObject
 
@@ -24,6 +25,7 @@ typedef void(^KRRBFOutputLayerCompletion)(double rmse);
 
 -(void)removeAllNets;
 -(void)addNetsFromArray:(NSArray<KRRBFOutputNet *> *)_outputNets;
--(void)outputWithPatterns:(NSArray <KRRBFPattern *> *)_patterns centers:(NSArray <KRRBFCenterNet *> *)_centers eachOutput:(KRRBFOutputLayerOutput)_eachOutput completion:(KRRBFOutputLayerCompletion)_completion;
+-(void)outputWithPatterns:(NSArray <KRRBFPattern *> *)_patterns centers:(NSArray <KRRBFCenterNet *> *)_centers completion:(KRRBFOutputLayerCompletion)_completion eachOutput:(KRRBFOutputLayerOutput)_eachOutput;
+-(void)predicateWithPatterns:(NSArray<KRRBFPattern *> *)_patterns centers:(NSArray<KRRBFCenterNet *> *)_centers outputs:(KRRBFOutputLayerPredication)_outputsBlock;
 
 @end

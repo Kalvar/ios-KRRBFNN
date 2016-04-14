@@ -112,7 +112,7 @@
 
 #pragma --mark Learning Methods
 // 使用最小平方法求權重(LMS)
--(NSArray <KRRBFOutputNet *> *)outputWeightsWithCenters:(NSArray <KRRBFCenterNet *> *)_centers patterns:(NSArray <KRRBFPattern *> *)_patterns targets:(NSArray <KRRBFTarget *> *)_targets
+-(NSArray <KRRBFOutputNet *> *)outputNetsWithCenters:(NSArray <KRRBFCenterNet *> *)_centers patterns:(NSArray <KRRBFPattern *> *)_patterns targets:(NSArray <KRRBFTarget *> *)_targets
 {
     // # Notes :
     //   對 1 個 期望輸出，就要解 1 次聯立，來算出所有的 centers outputs 在到該 target output 時的所有權重線為多少，
@@ -123,7 +123,7 @@
     //   那就要在使用 _calculatePhiWithPatterns:toCenters: 計算 Phi 的時候，
     //   要從 Patterns to Centers 反過來改成 Centers to Patterns (_calculatePhiWithCenters:toPatterns:)，以中心點為主要對象，
     //   先將同樣中心點所對應到的所有 Patterns 的 phi value，都集中在同一個 Array 裡，這樣就能做到預先轉置矩陣的效果了。
-    //NSArray *_phi            = [self _calculatePhiWithCenters:_centers toPatterns:_patterns;
+    //NSArray *_phi = [self _calculatePhiWithCenters:_centers toPatterns:_patterns;
     
     // # 最後決定 :
     //   先保留原公式算法，以便於後人在參照公式的行為上，能保持一致性，之後如有 Performance 需求，再用上述方法優化即可。
@@ -133,6 +133,7 @@
     for( KRRBFTarget *_targetOutput in _targets )
     {
         _outputIndex              += 1;
+        
         // 先解 Output 1, 再解 Output 2 ... 其它類推
         NSArray *_targetWeights    = [_mathLib solveEquationsAtMatrix:_phi outputs:@[_targetOutput.sameSequences]];
         

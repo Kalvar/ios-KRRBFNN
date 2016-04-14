@@ -18,6 +18,6 @@
 +(instancetype)sharedLMS;
 -(instancetype)init;
 
--(NSArray <KRRBFOutputNet *> *)outputWeightsWithCenters:(NSArray <KRRBFCenterNet *> *)_centers patterns:(NSArray <KRRBFPattern *> *)_patterns targets:(NSArray <KRRBFTarget *> *)_targets;
+-(NSArray <KRRBFOutputNet *> *)outputNetsWithCenters:(NSArray <KRRBFCenterNet *> *)_centers patterns:(NSArray <KRRBFPattern *> *)_patterns targets:(NSArray <KRRBFTarget *> *)_targets;
 
 @end
