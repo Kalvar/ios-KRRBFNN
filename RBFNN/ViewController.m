@@ -54,7 +54,7 @@
             [p addTarget:( arc4random() % _targetScope )];
         }
         
-        NSLog(@"p(%@).targets : %@", p.indexKey, p.targets);
+        //NSLog(@"p(%@).targets : %@", p.indexKey, p.targets);
         [patterns addObject:p];
     }
     return patterns;
@@ -62,9 +62,8 @@
 
 -(NSArray <KRRBFPattern *> *)createVerificationPatterns
 {
-    NSMutableArray *patterns = [NSMutableArray new];
     // Creates verification patterns
-    __block NSMutableArray *_verifications = [NSMutableArray new];
+    NSMutableArray *_verifications = [NSMutableArray new];
     for( NSInteger i=0; i<_patternItem/2; i++ )
     {
         KRRBFPattern *p = [[KRRBFPattern alloc] init];
@@ -73,10 +72,10 @@
         {
             [p addFeature:( arc4random() % _featureScope )];
         }
-        NSLog(@"p(%@).features : %@", p.indexKey, p.features);
+        //NSLog(@"p(%@).features : %@", p.indexKey, p.features);
         [_verifications addObject:p];
     }
-    return patterns;
+    return _verifications;
 }
 
 -(void)testOls
@@ -104,7 +103,7 @@
             }];
         }
     } eachOutput:^(KRRBFOutputNet *outputNet) {
-        NSLog(@"net(%@) the output is %f and target is %f", outputNet.indexKey, outputNet.outputValue, outputNet.targetValue);
+        //NSLog(@"net(%@) the output is %f and target is %f", outputNet.indexKey, outputNet.outputValue, outputNet.targetValue);
     }];
     
 }

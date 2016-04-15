@@ -240,7 +240,7 @@
             }
         }
         
-        NSLog(@"sumErr %f, _maxErrValue %f", _sumError, _maxErrValue);
+        //NSLog(@"sumErr %f, _maxErrValue %f", _sumError, _maxErrValue);
         
         // 取出這次誤差下降率最大的中心點
         KRRBFPattern *_pickedPattern = [_trainSamples objectAtIndex:_maxErrIndex];

@@ -26,7 +26,7 @@
  
  # RBFNN 使用方法 :
      - Recall weights (實作儲存訓練好的 weights，和回復訓練好的 weights)
-     - Recall centers (實作儲存訓練好/挑好的 centers，和回復訓練好的 centerss)
+     - Recall centers (實作儲存訓練好/挑好的 centers，和回復訓練好的 centers)
      - 原來有幾個特徵值與輸出，就要用回幾個特徵值與輸出 (跟一般的 NN 一樣)，否則就要重新訓練網路
  
  # RBFNN that training is 2 steps :
@@ -91,12 +91,12 @@
         _patterns           = [NSMutableArray new];
         _targets            = [NSMutableArray new];
         
-        _hiddenLayer        = [KRRBFHiddenLayer sharedLayer];
-        _outputLayer        = [KRRBFOutputLayer sharedLayer];
+        _hiddenLayer        = [[KRRBFHiddenLayer alloc] init];
+        _outputLayer        = [[KRRBFOutputLayer alloc] init];
         
         _rmse               = 0.0f;
         
-        _fetcher            = [KRRBFFetcher sharedFetcher];
+        _fetcher            = [[KRRBFFetcher alloc] init];
     }
     return self;
 }
