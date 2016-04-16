@@ -88,7 +88,6 @@
     self = [super init];
     if( self )
     {
-        _centers        = [NSMutableArray new];
         _activeFunction = [KRRBFActiviation sharedActiviation];
         _mathLib        = [KRMathLib sharedLib];
         _maxPick        = 0; // Default

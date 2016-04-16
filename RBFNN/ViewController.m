@@ -82,14 +82,14 @@
 {
     __weak typeof(self) _weakSelf = self;
     
-    KRRBFNN *network = [KRRBFNN sharedNetwork];
+    KRRBFNN *network = [[KRRBFNN alloc] init];
     [network addPatterns:[self createTrainingPatterns]];
     [network pickCentersByOLSWithTolerance:0.8f];
     [network trainLMSWithCompletion:^(BOOL success, KRRBFNN *rbfnn, double rmse) {
         NSLog(@"rmse : %f", rmse);
         if( rmse > 0.1f )
         {
-            // Save trained parameters of network.
+            // Save that trained parameters of network.
             [rbfnn saveForKey:@"RBFNN_1"];
             // Reset all trained information to prepare next retrain.
             [rbfnn reset];
@@ -108,10 +108,37 @@
     
 }
 
+-(void)testRandom
+{
+    __weak typeof(self) _weakSelf = self;
+    
+    KRRBFNN *network = [[KRRBFNN alloc] init];
+    [network addPatterns:[self createTrainingPatterns]];
+    [network pickCentersByRandomWithLimitCount:5];
+    [network trainLMSWithCompletion:^(BOOL success, KRRBFNN *rbfnn, double rmse) {
+        NSLog(@"rmse : %f", rmse);
+        if( rmse > 0.1f )
+        {
+            [rbfnn saveForKey:@"RBFNN_2"];
+            [rbfnn reset];
+            [rbfnn recoverForKey:@"RBFNN_2"];
+            
+            __strong typeof(self) _strongSelf = _weakSelf;
+            // Predicating by trained network.
+            [rbfnn predicateWithPatterns:[_strongSelf createVerificationPatterns] output:^(NSDictionary<NSString *,NSArray<NSNumber *> *> *outputs) {
+                NSLog(@"predicated outputs : %@", outputs);
+            }];
+        }
+    } eachOutput:^(KRRBFOutputNet *outputNet) {
+        //NSLog(@"net(%@) the output is %f and target is %f", outputNet.indexKey, outputNet.outputValue, outputNet.targetValue);
+    }];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupParameters];
     [self testOls];
+    [self testRandom];
 }
 
 - (void)didReceiveMemoryWarning {

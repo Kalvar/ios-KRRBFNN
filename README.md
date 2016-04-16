@@ -19,7 +19,14 @@ KRRBFNN *network = [KRRBFNN sharedNetwork];
 
 #### Picking centers by OLS
 ``` objective-c
+// The tolerance is a custom number, in here example is 0.8f.
 [network pickCentersByOLSWithTolerance:0.8f];
+```
+
+#### Picking centers by Random
+``` objective-c
+// LimitCount is how many centers do you wanna pick.
+[network pickCentersByRandomWithLimitCount:5];
 ```
 
 #### Training by LMS
@@ -55,7 +62,7 @@ Retrieving centers and weights.
 
 ## Version
 
-V1.0.0
+V1.0.2
 
 ## LICENSE
 

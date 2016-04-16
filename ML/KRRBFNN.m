@@ -180,8 +180,12 @@
  */
 -(NSArray <KRRBFCenterNet *> *)pickCentersByRandomWithLimitCount:(NSInteger)_limitCount toSave:(BOOL)_toSave
 {
-    // TODO:
-    return nil;
+    NSArray *_choseCenters = [self.random chooseWithPatterns:_patterns pickNumber:_limitCount];
+    if( _toSave )
+    {
+        [_hiddenLayer addCentersFromArray:_choseCenters];
+    }
+    return _choseCenters;
 }
 
 -(NSArray <KRRBFCenterNet *> *)pickCentersByRandomWithLimitCount:(NSInteger)_limitCount
@@ -292,5 +296,13 @@
     }
     return nil;
 }
+
+/*
+-(void)dealloc
+{
+    // Since tested experience, here objects are correctly dealloced.
+    NSLog(@"KRRBFNN is dealloced");
+}
+ */
 
 @end
