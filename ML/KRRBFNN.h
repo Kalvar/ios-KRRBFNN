@@ -61,6 +61,8 @@ typedef void(^KRRBFNNPredication)(NSDictionary <NSString *, NSArray <NSNumber *>
 -(void)addPattern:(KRRBFPattern *)_pattern;
 -(void)addPatterns:(NSArray <KRRBFPattern *> *)_samples;
 
+-(void)randomWeightsBetweenMin:(double)_minValue max:(double)_maxValue;
+
 -(NSArray <KRRBFCenterNet *> *)pickCentersByOLSWithTolerance:(double)_tolerance toSave:(BOOL)_toSave;
 -(NSArray <KRRBFCenterNet *> *)pickCentersByOLSWithTolerance:(double)_tolerance;
 -(NSArray <KRRBFCenterNet *> *)pickCentersByRandomWithLimitCount:(NSInteger)_limitCount toSave:(BOOL)_toSave;

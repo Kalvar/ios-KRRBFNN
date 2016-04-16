@@ -42,6 +42,11 @@
     }
 }
 
+-(void)addWeight:(NSNumber *)_weight
+{
+    [_weights addObject:_weight];
+}
+
 -(double)outputWithRBFValues:(NSArray *)_rbfValues
 {
     double _sum      = 0.0f;

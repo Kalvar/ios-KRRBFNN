@@ -10,6 +10,7 @@
 #import "KRRBFTarget.h"
 #import "KRRBFOutputLayer.h"
 #import "KRRBFFetcher.h"
+#import "KRMathLib.h"
 
 /*
  # 有幾個實作想法 :
@@ -146,6 +147,31 @@
     [_patterns addObjectsFromArray:_samples];
 }
 
+#pragma --mark Weights
+-(void)randomWeightsBetweenMin:(double)_minValue max:(double)_maxValue
+{
+    if( nil == _patterns || [_patterns count] == 0 )
+    {
+        return;
+    }
+    
+    if( nil == self.centers || [self.centers count] == 0 )
+    {
+        return;
+    }
+    
+    KRRBFPattern *_aPattern = [_patterns firstObject];
+    // 有幾個期望輸出
+    NSInteger _targetCount  = [_aPattern.targets count];
+    // 有幾個中心點
+    NSInteger _centerCount  = [self.centers count];
+    // 權重共有幾條是由 ( 中心點個數 x 期望輸出數量 ) 而來
+    [_outputLayer addNetsFromArray:[self.sga randomWeightsWithCenterCount:_centerCount
+                                                              targetCount:_targetCount
+                                                               betweenMin:_minValue
+                                                                      max:_maxValue]];
+}
+
 #pragma --mark Training Methods
 /*
  * @ Use OLS method to choose initial centers
@@ -206,8 +232,7 @@
     }
     
     // LMS 解聯立一次即求得最佳權重
-    NSArray <KRRBFOutputNet *> *_outputWeights = [self.lms outputNetsWithCenters:self.centers patterns:_patterns targets:_targets];
-    [_outputLayer addNetsFromArray:_outputWeights];
+    [_outputLayer addNetsFromArray:[self.lms outputNetsWithCenters:self.centers patterns:_patterns targets:_targets]];
     [_outputLayer outputWithPatterns:_patterns centers:self.centers completion:^(double rmse) {
         _rmse = rmse;
         if( _completion )

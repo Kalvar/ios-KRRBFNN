@@ -10,7 +10,7 @@
 
 @interface KRRBFPattern : KRRBFNet
 
-@property (nonatomic, strong) NSMutableArray *targets; // 本 Pattern 的目標輸出值
+@property (nonatomic, strong) NSMutableArray *targets; // 本 Pattern 的目標輸出值 (多分類)
 
 -(instancetype)init;
 -(void)addFeature:(double)_featureValue;

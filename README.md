@@ -29,6 +29,12 @@ KRRBFNN *network = [KRRBFNN sharedNetwork];
 [network pickCentersByRandomWithLimitCount:5];
 ```
 
+#### Picking centers by Random
+``` objective-c
+// Random setup weights of network must after picked centers and added patterns.
+[network randomWeightsBetweenMin:-0.25f max:0.25f];
+```
+
 #### Training by LMS
 ``` objective-c
 [network trainLMSWithCompletion:^(BOOL success, KRRBFNN *rbfnn, double rmse) {

@@ -8,9 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+@class KRRBFOutputNet;
+
 @interface KRRBFSGA : NSObject
 
 +(instancetype)sharedSGA;
 -(instancetype)init;
+
+-(NSArray <KRRBFOutputNet *> *)randomWeightsWithCenterCount:(NSInteger)_centerCount targetCount:(NSInteger)_targetCount betweenMin:(double)_minValue max:(double)_maxValue;
 
 @end

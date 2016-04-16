@@ -257,11 +257,16 @@
         
     } // end while
     
-    NSLog(@"選中的 %li 個 Centers : %@", [_choseCenters count], _choseCenters);
+    //NSLog(@"選中的 %li 個 Centers : %@", [_choseCenters count], _choseCenters);
     
     return _choseCenters;
 }
 
-
+/*
+-(void)dealloc
+{
+    NSLog(@"KRRBFOLS is dealloced");
+}
+ */
 
 @end

@@ -114,19 +114,25 @@
 // 使用最小平方法求權重(LMS)
 -(NSArray <KRRBFOutputNet *> *)outputNetsWithCenters:(NSArray <KRRBFCenterNet *> *)_centers patterns:(NSArray <KRRBFPattern *> *)_patterns targets:(NSArray <KRRBFTarget *> *)_targets
 {
-    // # Notes :
-    //   對 1 個 期望輸出，就要解 1 次聯立，來算出所有的 centers outputs 在到該 target output 時的所有權重線為多少，
-    //   所以，有 10 個輸出，就要解 10 次的聯立 (效能超差)。比較好的作法還是用 SGA 來做迭代修正參數，這樣在多輸出的情況下也不用擔心效能太差。
-    
-    // # 效能改進方法 (已實作) :
-    //   如果不想讓 MathLib solveEquationsAtMatrix:outputs: 的部份要對 _phi 多做 1 次的轉置矩陣 (取消轉置)，
-    //   那就要在使用 _calculatePhiWithPatterns:toCenters: 計算 Phi 的時候，
-    //   要從 Patterns to Centers 反過來改成 Centers to Patterns (_calculatePhiWithCenters:toPatterns:)，以中心點為主要對象，
-    //   先將同樣中心點所對應到的所有 Patterns 的 phi value，都集中在同一個 Array 裡，這樣就能做到預先轉置矩陣的效果了。
+    /*
+     * @ Notes :
+     *   對 1 個 期望輸出，就要解 1 次聯立，來算出所有的 centers outputs 在到該 target output 時的所有權重線為多少，
+     *   所以，有 10 個輸出，就要解 10 次的聯立 (效能超差)。比較好的作法還是用 SGA 來做迭代修正參數，這樣在多輸出的情況下也不用擔心效能太差。
+
+     * @ 效能改進方法 (已實作) :
+     *   如果不想讓 MathLib solveEquationsAtMatrix:outputs: 的部份要對 _phi 多做 1 次的轉置矩陣 (取消轉置)，
+     *   那就要在使用 _calculatePhiWithPatterns:toCenters: 計算 Phi 的時候，
+     *   要從 Patterns to Centers 反過來改成 Centers to Patterns (_calculatePhiWithCenters:toPatterns:)，以中心點為主要對象，
+     *   先將同樣中心點所對應到的所有 Patterns 的 phi value，都集中在同一個 Array 裡，這樣就能做到預先轉置矩陣的效果了。
+     *
+     */
+    // 優化算法
     //NSArray *_phi = [self _calculatePhiWithCenters:_centers toPatterns:_patterns;
     
-    // # 最後決定 :
-    //   先保留原公式算法，以便於後人在參照公式的行為上，能保持一致性，之後如有 Performance 需求，再用上述方法優化即可。
+    /*
+     * @ 最後決定 :
+     *   先保留原公式算法，以便於後人在參照公式的行為上，能保持一致性，之後如有 Performance 需求，再用上述註解的方法優化即可。
+     */
     NSArray *_phi            = [self _calculatePhiWithPatterns:_patterns toCenters:_centers];
     NSMutableArray *_weights = [NSMutableArray new];
     NSInteger _outputIndex   = -1;

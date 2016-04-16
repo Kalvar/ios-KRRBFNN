@@ -22,6 +22,7 @@
 
 -(void)removeAllWeights;
 -(void)addWeightsFromArray:(NSArray *)_outputWeights;
+-(void)addWeight:(NSNumber *)_weight;
 
 -(double)outputWithRBFValues:(NSArray *)_rbfValues;
 
