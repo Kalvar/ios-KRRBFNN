@@ -148,6 +148,7 @@
 }
 
 #pragma --mark Weights
+// Random to setup weights of network must after picked centers and added patterns.
 -(void)randomWeightsBetweenMin:(double)_minValue max:(double)_maxValue
 {
     if( nil == _patterns || [_patterns count] == 0 )

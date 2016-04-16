@@ -31,7 +31,7 @@ KRRBFNN *network = [KRRBFNN sharedNetwork];
 
 #### Random initial weights
 ``` objective-c
-// Random setup weights of network must after picked centers and added patterns.
+// Random to setup weights of network must after picked centers and added patterns.
 [network randomWeightsBetweenMin:-0.25f max:0.25f];
 ```
 
