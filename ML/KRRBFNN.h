@@ -56,6 +56,7 @@ typedef void(^KRRBFNNPredication)(NSDictionary <NSString *, NSArray <NSNumber *>
 -(void)removeForKey:(NSString *)_key;  // Removes saved network information.
 -(void)saveForKey:(NSString *)_key;    // Saving current trained network information.
 -(void)reset;                          // Cleans all trained information
+-(void)removeCachesIfNeeded;
 
 -(void)addPattern:(KRRBFPattern *)_pattern;
 -(void)addPatterns:(NSArray <KRRBFPattern *> *)_samples;

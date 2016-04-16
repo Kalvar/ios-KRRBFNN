@@ -130,6 +130,11 @@
     _rmse = 0.0f;
 }
 
+-(void)removeCachesIfNeeded
+{
+    [self.random removeCaches];
+}
+
 #pragma --mark Patterns
 -(void)addPattern:(KRRBFPattern *)_pattern
 {

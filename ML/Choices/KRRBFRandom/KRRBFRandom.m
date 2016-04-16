@@ -101,6 +101,14 @@
     return [self chooseWithPatterns:_patterns pickNumber:-1];
 }
 
+-(void)removeCaches
+{
+    if( nil != _cacheRandoms )
+    {
+        [_cacheRandoms removeAllObjects];
+    }
+}
+
 /*
 -(void)dealloc
 {

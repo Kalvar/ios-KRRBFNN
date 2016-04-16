@@ -21,4 +21,6 @@
 // Automatic choose centers with system random picking.
 -(NSArray <KRRBFCenterNet *> *)chooseAutomaticallyWithPatterns:(NSArray<KRRBFPattern *> *)_patterns;
 
+-(void)removeCaches;
+
 @end
