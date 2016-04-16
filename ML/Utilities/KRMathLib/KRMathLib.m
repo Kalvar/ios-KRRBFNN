@@ -44,6 +44,17 @@
 
 -(double)randomDoubleMax:(double)_maxValue min:(double)_minValue
 {
+    if( _maxValue == _minValue )
+    {
+        if ( _maxValue == 0.0f )
+        {
+            return 0.0f;
+        }
+        else
+        {
+            return _maxValue;
+        }
+    }
     return ((double)arc4random() / ( RAND_MAX * 2.0f ) ) * (_maxValue - _minValue) + _minValue;
 }
 

@@ -50,11 +50,18 @@
         _outputNet.indexKey        = @(_i);
         for( NSInteger _j=0; _j<_centerCount; _j++ )
         {
+            // If maxValue && minValue are 0.0f that weight also be zero.
             [_outputNet addWeight:[NSNumber numberWithDouble:[_mathLib randomDoubleMax:_maxValue min:_minValue]]];
         }
         [_weights addObject:_outputNet];
     }
     return _weights;
+}
+
+// 設定全零的權重
+-(NSArray <KRRBFOutputNet *> *)zeroWeightsWithCenterCount:(NSInteger)_centerCount targetCount:(NSInteger)_targetCount
+{
+    return [self randomWeightsWithCenterCount:_centerCount targetCount:_targetCount betweenMin:0.0f max:0.0f];
 }
 
 @end
