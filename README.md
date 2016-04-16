@@ -68,7 +68,7 @@ Retrieving centers and weights.
 
 ## Version
 
-V1.0.2
+V1.0.3
 
 ## LICENSE
 
