@@ -78,14 +78,15 @@
     return _verifications;
 }
 
--(void)testOls
+-(void)testOLS
 {
     __weak typeof(self) _weakSelf = self;
     
     KRRBFNN *network = [[KRRBFNN alloc] init];
     [network addPatterns:[self createTrainingPatterns]];
     [network pickCentersByOLSWithTolerance:0.8f];
-    [network trainLMSWithCompletion:^(BOOL success, KRRBFNN *rbfnn, double rmse) {
+    [network trainLMSWithCompletion:^(BOOL success, KRRBFNN *rbfnn) {
+        double rmse = rbfnn.rmse;
         NSLog(@"rmse : %f", rmse);
         if( rmse > 0.1f )
         {
@@ -102,10 +103,13 @@
                 NSLog(@"predicated outputs : %@", outputs);
             }];
         }
-    } eachOutput:^(KRRBFOutputNet *outputNet) {
-        //NSLog(@"net(%@) the output is %f and target is %f", outputNet.indexKey, outputNet.outputValue, outputNet.targetValue);
+    } patternOutput:^(NSArray<KRRBFOutputNet *> *patternOutputs) {
+        // That outpus of each pattern.
+        for( KRRBFOutputNet *outputNet in patternOutputs )
+        {
+            NSLog(@"net(%@) the output is %f and target is %f", outputNet.indexKey, outputNet.outputValue, outputNet.targetValue);
+        }
     }];
-    
 }
 
 -(void)testRandom
@@ -115,7 +119,8 @@
     KRRBFNN *network = [[KRRBFNN alloc] init];
     [network addPatterns:[self createTrainingPatterns]];
     [network pickCentersByRandomWithLimitCount:5];
-    [network trainLMSWithCompletion:^(BOOL success, KRRBFNN *rbfnn, double rmse) {
+    [network trainLMSWithCompletion:^(BOOL success, KRRBFNN *rbfnn) {
+        double rmse = rbfnn.rmse;
         NSLog(@"rmse : %f", rmse);
         if( rmse > 0.1f )
         {
@@ -129,16 +134,38 @@
                 NSLog(@"predicated outputs : %@", outputs);
             }];
         }
-    } eachOutput:^(KRRBFOutputNet *outputNet) {
-        //NSLog(@"net(%@) the output is %f and target is %f", outputNet.indexKey, outputNet.outputValue, outputNet.targetValue);
+    } patternOutput:^(NSArray<KRRBFOutputNet *> *patternOutputs) {
+        for( KRRBFOutputNet *outputNet in patternOutputs )
+        {
+            NSLog(@"net(%@) the output is %f and target is %f", outputNet.indexKey, outputNet.outputValue, outputNet.targetValue);
+        }
+    }];
+}
+
+-(void)testSGA
+{
+    KRRBFNN *network = [[KRRBFNN alloc] init];
+    [network addPatterns:[self createTrainingPatterns]];
+    [network pickCentersByRandomWithLimitCount:5];
+    [network randomWeightsBetweenMin:0.0 max:0.5];
+    
+    network.learningRate   = 0.8f;
+    network.toleranceError = 0.001f;
+    network.maxIteration   = 100;
+    
+    [network trainSGAWithCompletion:^(BOOL success, KRRBFNN *rbfnn) {
+        
+    } iteration:^BOOL(NSInteger iteration, double rmse, NSArray<KRRBFCenterNet *> *centers, NSArray<KRRBFOutputNet *> *weights, double sigma) {
+        return YES;
     }];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupParameters];
-    [self testOls];
-    [self testRandom];
+    //[self testOLS];
+    //[self testRandom];
+    [self testSGA];
 }
 
 - (void)didReceiveMemoryWarning {

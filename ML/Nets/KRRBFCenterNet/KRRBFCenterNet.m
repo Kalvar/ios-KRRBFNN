@@ -16,6 +16,7 @@
     if( self )
     {
         [self copyWithFeatures:_features];
+        _sigma = -1.0f; // Default -1.0f means nothing.
     }
     return self;
 }
@@ -45,6 +46,7 @@
     KRRBFCenterNet *_net = [[[self class] alloc] init];
     [_net setFeatures:[[NSMutableArray alloc] initWithArray:self.features copyItems:YES]];
     [_net setIndexKey:[self.indexKey copy]];
+    [_net setSigma:_sigma];
     return _net;
 }
 
@@ -54,6 +56,7 @@
     self.coder = aCoder; // Inherited from parent class.
     [self encodeObject:self.features forKey:@"features"];
     [self encodeObject:self.indexKey forKey:@"indexKey"];
+    [self encodeObject:[NSNumber numberWithDouble:_sigma] forKey:@"sigma"];
 }
 
 -(instancetype)initWithCoder:(NSCoder *)aDecoder
@@ -61,9 +64,10 @@
     self = [super init];
     if(self)
     {
-        self.coder = aDecoder;
+        self.coder    = aDecoder;
         self.features = [self decodeForKey:@"features"];
         self.indexKey = [self decodeForKey:@"indexKey"];
+        _sigma        = [[self decodeForKey:@"sigma"] doubleValue];
     }
     return self;
 }

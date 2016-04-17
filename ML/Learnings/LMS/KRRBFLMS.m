@@ -40,6 +40,7 @@
     return _maxDistance;
 }
 
+// LMS uses common sigma for all centers.
 -(double)_calculateSigmaWithCenters:(NSArray <KRRBFCenterNet *> *)_centers
 {
     double _maxDistance = [self _calculateMaxDistanceWithCenters:_centers];
@@ -49,7 +50,7 @@
 // This method is that normally forward network calculation.
 -(NSArray *)_calculatePhiWithPatterns:(NSArray <KRRBFPattern *> *)_patterns toCenters:(NSArray <KRRBFCenterNet *> *)_centers
 {
-    // Use centers to calculate that sigma.
+    // Use centers to calculate that common sigma (all centers use the same sigma).
     double _sigma        = [self _calculateSigmaWithCenters:_centers];
     // That phi[] needs to implement the forward network from patterns to centers.
     NSMutableArray *_phi = [NSMutableArray new];
@@ -66,7 +67,7 @@
     return _phi;
 }
 
-// This method is optimized calculation performance without transpose matrix when we are doing solveEquations,
+// This method is " optimized calculation performance " without transpose matrix when we are doing solveEquations,
 // We could save that transpose matrix processing before we use [_mathLib solveEquationsAtMatrix:outputs:].
 -(NSArray *)_calculatePhiWithCenters:(NSArray <KRRBFCenterNet *> *)_centers toPatterns:(NSArray <KRRBFPattern *> *)_patterns
 {

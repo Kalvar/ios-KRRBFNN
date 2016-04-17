@@ -43,6 +43,7 @@
     return _maxDistance;
 }
 
+// OLS uses common sigma for all centers.
 -(double)_calculateSigmaWithCenters:(NSArray <KRRBFPattern *> *)_centers
 {
     double _maxDistance = [self _calculateMaxDistanceWithCenters:_centers];
@@ -105,7 +106,7 @@
     
     // 運算原理是每一個 Pattern 都是 Center 的 Candidate，也就是每一個 Pattern 都有可能成為 Center，
     // 這裡開始對每一個中心點做交互運算，例如有 300 筆 Training Patterns，這裡就要跑 300 * 300 = 9 萬次去計算所有 Patterns 彼此之間的距離，
-    // 先取出 Patterns 和 Candidate Centers 之間運算完後最大的距離值再計算 Sigma (標準差)。
+    // 先取出 Patterns 和 Candidate Centers 之間運算完後最大的距離值再計算 "共同的 Sigma (標準差)"。
     // Sigma = 所有中心點間最大的距離 / sqrt(範本數量)，另 1 個公式是 / sqrt(範本數量 + 1)
     double _sigma = [self _calculateSigmaWithCenters:_trainSamples];
     // 用算好的 Sigma 和活化函式來重新運算每一筆 Pattern 和 Centers 之間的距離 (RBF)

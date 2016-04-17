@@ -10,6 +10,8 @@
 
 @interface KRRBFCenterNet : KRRBFNet
 
+@property (nonatomic, assign) double sigma;
+
 -(instancetype)initWithFeatures:(NSArray *)_features;
 -(instancetype)init;
 -(void)copyWithFeatures:(NSArray *)_features;
