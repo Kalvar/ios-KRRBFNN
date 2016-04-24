@@ -29,8 +29,6 @@ typedef BOOL(^KRRBFSGAIteration)(NSInteger iterationTimes, double iterationRMSE,
 @property (nonatomic, assign) double sigmaLearningRate;  // Learning rate of sigma updating.
 @property (nonatomic, assign) double learningRate;       // If set up this parameter will set all learning rates are same.
 
-@property (nonatomic, assign) double costError;          // Error value use in updating weights, centers and sigma.
-
 +(instancetype)sharedSGA;
 -(instancetype)init;
 

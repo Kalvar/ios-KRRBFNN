@@ -78,19 +78,40 @@
 // To use reference memory mechanism
 -(void)updateWeights
 {
-#warning  TODO:
-    
+    // 用 OutputNet (輸出神經元) 的輸出誤差平方值來修正跟這一個 OutputNet 相連接的每一條權重線
+    NSMutableArray <KRRBFOutputNet *> *_copiedWeights = [[NSMutableArray alloc] initWithArray:_weights copyItems:YES];
+    // To use old weights update new weights.
+    for( KRRBFOutputNet *_outputNet in _copiedWeights )
+    {
+        NSMutableArray *_newWeights = [NSMutableArray new];
+        double _errorValue          = _outputNet.costError;
+        // 取出所有對應該 Output Net 的中心點
+        NSInteger _index = -1;
+        for( KRRBFCenterNet *_centerNet in _centers )
+        {
+            _index += 1;
+            // _centerNet.rbfValue is 對應當前 Output Net 的各個中心點的 RBF output value
+            // 取出 Output Net 對應該 Center 的權重
+            NSNumber *_centerWeight = [_outputNet.weights objectAtIndex:_index];
+            double _newWeight       = [_centerWeight doubleValue] + (_weightLearningRate * _errorValue * _centerNet.rbfValue);
+            [_newWeights addObject:[NSNumber numberWithDouble:_newWeight]];
+        }
+        [_outputNet addWeightsFromArray:_newWeights];
+    }
 }
 
 -(void)updateCenters
 {
 #warning  TODO:
     
+    // c1 error = ( error1 * weight11 + error2 * weight12 + ... + errorN * weights1N ) / ( sigma * sigma )
+    
 }
 
 -(void)updateSigmas
 {
 #warning  TODO:
+    // sigma error = ( error1 * weight11 + error2 * weight12 + ... + errorN * weights1N ) / ( sigma * sigma * sigma )
     
 }
 

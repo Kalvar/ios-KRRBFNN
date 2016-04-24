@@ -11,6 +11,7 @@
 @interface KRRBFCenterNet : KRRBFNet
 
 @property (nonatomic, assign) double sigma;
+@property (nonatomic, assign) double rbfValue; // The RBF value of this center of current pattern.
 
 -(instancetype)initWithFeatures:(NSArray *)_features;
 -(instancetype)init;

@@ -123,6 +123,8 @@
         {
             double _rbfValue = [self.activeFunction rbf:_pattern.features x2:_center.features sigma:_center.sigma];
             [_rbfValues addObject:[NSNumber numberWithDouble:_rbfValue]];
+            // To record this RBF value with current center.
+            _center.rbfValue = _rbfValue;
         }
         
         // Centers outputs to Network output nets, the output1, output2, ... outputN.
@@ -132,13 +134,13 @@
         for( KRRBFOutputNet *_outputNet in _nets )
         {
             _outputIndex            += 1;
-            // Network output value
+            // To calculate network output value
             [_outputNet outputWithRBFValues:_rbfValues];
             // The target-output of pattern
             NSNumber *_patternTarget = [_pattern.targets objectAtIndex:_outputIndex];
             _outputNet.targetValue   = [_patternTarget doubleValue];
             // Cost value (error value) of pattern
-            _patternCost            += _outputNet.outputError * _outputNet.outputError;
+            _patternCost            += _outputNet.costError;
         }
         
         // Cost value is summed from all cost values of patterns.
@@ -175,7 +177,8 @@
         NSMutableArray *_outputs = [NSMutableArray new];
         for( KRRBFOutputNet *_outputNet in _nets )
         {
-            [_outputs addObject:[NSNumber numberWithDouble:[_outputNet outputWithRBFValues:_rbfValues]]];
+            [_outputNet outputWithRBFValues:_rbfValues];
+            [_outputs addObject:[NSNumber numberWithDouble:_outputNet.outputValue]];
         }
         
         // Uses pattern.indexKey to record its outputs of predication.

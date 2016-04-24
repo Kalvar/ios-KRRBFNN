@@ -122,8 +122,12 @@
         
         __strong typeof(self) _strongSelf = _weakSelf;
         
-        // 用 costError (sum error value) 來做 SGA 修正
-        _strongSelf.sga.costError = costError;
+        
+        
+        // 用 costError (sum error value) 來做 SGA 修正 centers, sigmas
+        
+        
+        
         // Below updating methods are used reference memory to automatic update outside values.
         [_strongSelf.sga updateWeights];
         [_strongSelf.sga updateCenters];

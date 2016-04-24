@@ -47,6 +47,7 @@
     [_net setFeatures:[[NSMutableArray alloc] initWithArray:self.features copyItems:YES]];
     [_net setIndexKey:[self.indexKey copy]];
     [_net setSigma:_sigma];
+    [_net setRbfValue:_rbfValue];
     return _net;
 }
 
@@ -57,6 +58,7 @@
     [self encodeObject:self.features forKey:@"features"];
     [self encodeObject:self.indexKey forKey:@"indexKey"];
     [self encodeObject:[NSNumber numberWithDouble:_sigma] forKey:@"sigma"];
+    [self encodeObject:[NSNumber numberWithDouble:_rbfValue] forKey:@"rbfValue"];
 }
 
 -(instancetype)initWithCoder:(NSCoder *)aDecoder
@@ -68,6 +70,7 @@
         self.features = [self decodeForKey:@"features"];
         self.indexKey = [self decodeForKey:@"indexKey"];
         _sigma        = [[self decodeForKey:@"sigma"] doubleValue];
+        _rbfValue     = [[self decodeForKey:@"rbfValue"] doubleValue];
     }
     return self;
 }
