@@ -119,20 +119,10 @@
         [_strongSelf _sgaWithCompletion:_completion iteration:_iteration];
         
     } patternOutput:^(NSArray<KRRBFOutputNet *> *patternOutputs, double costError) {
-        
         __strong typeof(self) _strongSelf = _weakSelf;
-        
-        
-        
-        // 用 costError (sum error value) 來做 SGA 修正 centers, sigmas
-        
-        
-        
         // Below updating methods are used reference memory to automatic update outside values.
+        [_strongSelf.sga updateCentersAndSigmas];
         [_strongSelf.sga updateWeights];
-        [_strongSelf.sga updateCenters];
-        [_strongSelf.sga updateSigmas];
-        
     }];
 }
 

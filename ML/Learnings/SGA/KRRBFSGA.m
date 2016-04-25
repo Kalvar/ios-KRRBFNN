@@ -75,13 +75,34 @@
 }
 
 #pragma --mark Update Methods
-// To use reference memory mechanism
+// 一定要先更新的中心點與 Sigma
+-(void)updateCentersAndSigmas
+{
+    NSInteger _index = -1;
+    for( KRRBFCenterNet *_centerNet in _centers )
+    {
+        _index += 1;
+        for( KRRBFOutputNet *_outputNet in _weights )
+        {
+            
+        }
+        
+        
+        
+        
+        //NSArray *_newCenters = [_mathLib plusMatrix:_centerNet.features anotherMatrix:<#(NSArray *)#>];
+        // c1 error = ( error1 * weight11 + error2 * weight12 + ... + errorN * weights1N ) / ( sigma * sigma )
+        
+        // sigma error = ( error1 * weight11 + error2 * weight12 + ... + errorN * weights1N ) / ( sigma * sigma * sigma )
+    }
+    
+}
+
+// 最後再更新權重 (因為權重會先不斷的被共用運算，故得最後再更新)
 -(void)updateWeights
 {
     // 用 OutputNet (輸出神經元) 的輸出誤差平方值來修正跟這一個 OutputNet 相連接的每一條權重線
-    NSMutableArray <KRRBFOutputNet *> *_copiedWeights = [[NSMutableArray alloc] initWithArray:_weights copyItems:YES];
-    // To use old weights update new weights.
-    for( KRRBFOutputNet *_outputNet in _copiedWeights )
+    for( KRRBFOutputNet *_outputNet in _weights )
     {
         NSMutableArray *_newWeights = [NSMutableArray new];
         double _errorValue          = _outputNet.costError;
@@ -98,21 +119,6 @@
         }
         [_outputNet addWeightsFromArray:_newWeights];
     }
-}
-
--(void)updateCenters
-{
-#warning  TODO:
-    
-    // c1 error = ( error1 * weight11 + error2 * weight12 + ... + errorN * weights1N ) / ( sigma * sigma )
-    
-}
-
--(void)updateSigmas
-{
-#warning  TODO:
-    // sigma error = ( error1 * weight11 + error2 * weight12 + ... + errorN * weights1N ) / ( sigma * sigma * sigma )
-    
 }
 
 #pragma --mark Free Memory

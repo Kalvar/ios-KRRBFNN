@@ -15,6 +15,8 @@
 
 -(instancetype)initWithFeatures:(NSArray *)_features;
 -(instancetype)init;
+
 -(void)copyWithFeatures:(NSArray *)_features;
+-(void)addFeaturesFromArray:(NSArray *)_features;
 
 @end

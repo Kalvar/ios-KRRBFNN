@@ -40,6 +40,15 @@
     }
 }
 
+-(void)addFeaturesFromArray:(NSArray *)_features
+{
+    if( self.features && _features )
+    {
+        [self.features removeAllObjects];
+        [self.features addObjectsFromArray:_features];
+    }
+}
+
 #pragma --mark NSCopying
 -(instancetype)copyWithZone:(NSZone *)zone
 {
