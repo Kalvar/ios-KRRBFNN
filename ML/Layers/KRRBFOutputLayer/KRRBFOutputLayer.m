@@ -148,7 +148,7 @@
         
         if( _patternOutput )
         {
-            _patternOutput(_nets, _patternCost);
+            _patternOutput(_nets, _patternCost, _pattern);
         }
     }
     

@@ -13,7 +13,7 @@
 @class KRRBFOutputNet;
 @class KRRBFOutputLayer;
 
-typedef void(^KRRBFOutputLayerPatternOutput)(NSArray <KRRBFOutputNet *> *patternOutputs, double costError);
+typedef void(^KRRBFOutputLayerPatternOutput)(NSArray <KRRBFOutputNet *> *patternOutputs, double costError, KRRBFPattern *currentPattern);
 typedef void(^KRRBFOutputLayerCompletion)(KRRBFOutputLayer *layer);
 typedef void(^KRRBFOutputLayerPredication)(NSDictionary <NSString *, NSArray <NSNumber *> *> *predications);
 

@@ -118,10 +118,10 @@
         // 遞迴跑下一迭代
         [_strongSelf _sgaWithCompletion:_completion iteration:_iteration];
         
-    } patternOutput:^(NSArray<KRRBFOutputNet *> *patternOutputs, double costError) {
+    } patternOutput:^(NSArray<KRRBFOutputNet *> *patternOutputs, double costError, KRRBFPattern *currentPattern) {
         __strong typeof(self) _strongSelf = _weakSelf;
         // Below updating methods are used reference memory to automatic update outside values.
-        [_strongSelf.sga updateCentersAndSigmas];
+        [_strongSelf.sga updateCentersWithCurrentPattern:currentPattern];
         [_strongSelf.sga updateWeights];
     }];
 }
@@ -313,7 +313,7 @@
         {
             _completion(YES, self);
         }
-    } patternOutput:^(NSArray<KRRBFOutputNet *> *patternOutputs, double costError) {
+    } patternOutput:^(NSArray<KRRBFOutputNet *> *patternOutputs, double costError, KRRBFPattern *currentPattern) {
         if( _patternOutput )
         {
             _patternOutput(patternOutputs);
