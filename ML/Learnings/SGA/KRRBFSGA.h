@@ -35,7 +35,7 @@ typedef BOOL(^KRRBFSGAIteration)(NSInteger iterationTimes, double iterationRMSE,
 -(NSArray <KRRBFOutputNet *> *)randomWeightsWithCenterCount:(NSInteger)_centerCount targetCount:(NSInteger)_targetCount betweenMin:(double)_minValue max:(double)_maxValue;
 -(NSArray <KRRBFOutputNet *> *)zeroWeightsWithCenterCount:(NSInteger)_centerCount targetCount:(NSInteger)_targetCount;
 
--(void)updateCentersWithCurrentPattern:(KRRBFPattern *)_currentPattern;
+-(void)updateCentersWithPattern:(KRRBFPattern *)_currentPattern;
 -(void)updateWeights;
 -(void)freeReferences;
 

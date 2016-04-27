@@ -13,13 +13,13 @@
 @class KRRBFOutputNet;
 @class KRRBFOutputLayer;
 
-typedef void(^KRRBFOutputLayerPatternOutput)(NSArray <KRRBFOutputNet *> *patternOutputs, double costError, KRRBFPattern *currentPattern);
+typedef void(^KRRBFOutputLayerPatternOutput)(NSArray <KRRBFOutputNet *> *patternOutputs, KRRBFPattern *currentPattern);
 typedef void(^KRRBFOutputLayerCompletion)(KRRBFOutputLayer *layer);
 typedef void(^KRRBFOutputLayerPredication)(NSDictionary <NSString *, NSArray <NSNumber *> *> *predications);
 
 @interface KRRBFOutputLayer : NSObject
 
-@property (nonatomic, strong) NSMutableArray <KRRBFOutputNet *> *nets; // Net is output
+@property (nonatomic, strong) NSMutableArray <KRRBFOutputNet *> *nets; // Output Nets
 @property (nonatomic, assign) double rmse;
 @property (nonatomic, assign) double costError; // Cost function of all patterns.
 //@property (nonatomic, assign) NSInteger iteration;

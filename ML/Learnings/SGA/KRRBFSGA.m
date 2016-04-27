@@ -75,50 +75,52 @@
 }
 
 #pragma --mark Update Methods
-// 一定要先更新的中心點與 Sigma
--(void)updateCentersWithCurrentPattern:(KRRBFPattern *)_currentPattern
+// 先更新的中心點與 Sigma
+-(void)updateCentersWithPattern:(KRRBFPattern *)_currentPattern
 {
     NSInteger _index = -1;
     for( KRRBFCenterNet *_centerNet in _centers )
     {
         _index += 1;
         // 運算原則是"更新中心點的同時，一併更新該中心點的 Sigma"
-        // 計算 Cost Value (Error), 即計算該 Center 要負擔多少的 Output Error Value
+        // 計算 Output Error ( ei(p) = di(p) - yi(p) ), 即計算該 Center 要負擔多少的 Output Error Value
         // SUM( wj(p) * ei(p) ), ex : c1 error = ( error1 * weight11 + error2 * weight12 + ... + errorN * weights1N ) / ( sigma * sigma )
+        // -> _sumCost for updating centers and their sigmas.
         double _sumCost = 0.0f;
         for( KRRBFOutputNet *_outputNet in _weights )
         {
             NSNumber *_centerWeight = [_outputNet.weights objectAtIndex:_index];
-            _sumCost += [_centerWeight doubleValue] * _outputNet.costError;
+            _sumCost += [_centerWeight doubleValue] * _outputNet.outputError; // Using the output error without ^2, it is ei(p) not the E(p).
         }
-        _sumCost               /= pow(_centerNet.sigma, 2);
-        double _deltaValue      = _centerLearningRate * _sumCost * _centerNet.rbfValue; // learningRate * ( wj(p) * ei(p) / sigma^2(p) ) * R(||x(p) - cj(p)||)
-        NSArray *_minusFeatures = [_mathLib minusMatrix:_currentPattern.features anotherMatrix:_centerNet.features]; // ( x(p) - cj(p) )
-        NSArray *_deltaCenters  = [_mathLib multiplyMatrix:_minusFeatures byNumber:_deltaValue];
-        NSArray *_newCenters    = [_mathLib plusMatrix:_centerNet.features anotherMatrix:_deltaCenters];
+        double _deltaCenterValue = _centerLearningRate * ( _sumCost / pow(_centerNet.sigma, 2) ) * _centerNet.rbfValue; // learningRate * ( wj(p) * ei(p) / sigma^2(p) ) * R(||x(p) - cj(p)||)
+        NSArray *_minusFeatures  = [_mathLib minusMatrix:_currentPattern.features anotherMatrix:_centerNet.features]; // ( x(p) - cj(p) )
+        NSArray *_deltaCenters   = [_mathLib multiplyMatrix:_minusFeatures byNumber:_deltaCenterValue];
+        NSArray *_newCenters     = [_mathLib plusMatrix:_centerNet.features anotherMatrix:_deltaCenters];
         [_centerNet addFeaturesFromArray:_newCenters];
         
-#warning TODO:
         // sigma error = ( error1 * weight11 + error2 * weight12 + ... + errorN * weights1N ) / ( sigma * sigma * sigma )
-        
+        // distance    = ||x(p) - cj(p)||^2 that means euclidean without sqrt().
+        double _distance   = [_mathLib distance:_currentPattern.features x2:_centerNet.features];
+        double _deltaSigma = _sigmaLearningRate * ( _sumCost / pow(_centerNet.sigma, 3) ) * _centerNet.rbfValue * _distance;
+        double _newSigma   = _centerNet.sigma + _deltaSigma;
+        _centerNet.sigma   = _newSigma;
     }
-    
 }
 
-// 最後再更新權重 (因為權重會先不斷的被共用運算，故得最後再更新)
+// 最後再更新權重 (因為舊權重會先不斷的被共用於中心點和 Sigma 的更新運算上，故最後才能更新權重)
 -(void)updateWeights
 {
-    // 用 OutputNet (輸出神經元) 的輸出誤差平方值來修正跟這一個 OutputNet 相連接的每一條權重線
+    // 用 OutputNet (輸出神經元) 的輸出誤差值(不是平方值 E(p))來修正跟這一個 OutputNet 相連接的每一條權重線
     for( KRRBFOutputNet *_outputNet in _weights )
     {
         NSMutableArray *_newWeights = [NSMutableArray new];
-        double _errorValue          = _outputNet.costError;
+        double _errorValue          = _outputNet.outputError;
         // 取出所有對應該 Output Net 的中心點
         NSInteger _index = -1;
         for( KRRBFCenterNet *_centerNet in _centers )
         {
             _index += 1;
-            // _centerNet.rbfValue is 對應當前 Output Net 的各個中心點的 RBF output value
+            // _centerNet.rbfValue is 對應當前 Output Net 的 "各個中心點的 RBF output value"
             // 取出 Output Net 對應該 Center 的權重
             NSNumber *_centerWeight = [_outputNet.weights objectAtIndex:_index];
             double _newWeight       = [_centerWeight doubleValue] + (_weightLearningRate * _errorValue * _centerNet.rbfValue);

@@ -33,10 +33,10 @@
 -(double)euclidean:(NSArray *)_x1 x2:(NSArray *)_x2
 {
     NSInteger _index = 0;
-    float _sum       = 0.0f;
+    double _sum      = 0.0f;
     for( NSNumber *_x in _x1 )
     {
-        _sum        += powf([_x floatValue] - [[_x2 objectAtIndex:_index] floatValue], 2);
+        _sum        += powf([_x doubleValue] - [[_x2 objectAtIndex:_index] doubleValue], 2);
         ++_index;
     }
     // 累加完距離後直接開根號

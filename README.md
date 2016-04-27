@@ -6,7 +6,7 @@ KRRBFNN is implemented Radial basis function network of machine learning.
 
 ```ruby
 platform :ios, '8.0'
-pod "KRRBFNN", "~> 1.0.0"
+pod "KRRBFNN", "~> 1.1.0"
 ```
 
 ## How To Get Started
@@ -51,6 +51,28 @@ KRRBFNN *network = [KRRBFNN sharedNetwork];
 }];
 ```
 
+#### Training by SGA
+``` objective-c
+//[network pickCentersByOLSWithTolerance:1.0f]; // To use OLS
+[network pickCentersByRandomWithLimitCount:5];  // To use Random picking
+
+[network randomWeightsBetweenMin:0.0 max:0.25];
+
+network.learningRate   = 0.8f;
+network.toleranceError = 0.001f;
+network.maxIteration   = 1000;
+
+[network trainSGAWithCompletion:^(BOOL success, KRRBFNN *rbfnn) {
+    NSLog(@"Done in %li the RMSE %f", rbfnn.iterationTimes, rbfnn.rmse);
+    [rbfnn saveForKey:@"RBFNN_SGA"];
+    [rbfnn reset];
+} iteration:^BOOL(NSInteger iteration, double rmse) {
+    NSLog(@"Iteration %li the RMSE %f", iteration, rmse);
+    // YES means we allow to continue next iteration, NO means don't do next iteration (immediately stop).
+    return YES;
+}];
+```
+
 #### Retrieve saved network information
 Retrieving centers and weights.
 ``` objective-c
@@ -68,7 +90,7 @@ Retrieving centers and weights.
 
 ## Version
 
-V1.0.3
+V1.1.0
 
 ## LICENSE
 

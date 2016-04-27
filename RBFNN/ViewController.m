@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "KRRBFNN.h"
+#import "KRMathLib.h"
 
 @interface ViewController ()
 
@@ -17,6 +18,8 @@
 @property (nonatomic, assign) NSInteger targetItem;
 @property (nonatomic, assign) NSInteger targetScope;
 
+@property (nonatomic, assign) BOOL featureScaling;
+
 @end
 
 @implementation ViewController
@@ -24,11 +27,14 @@
 #pragma --mark Examples
 -(void)setupParameters
 {
-    _patternItem  = 20; // Testing patterns
-    _featureItem  = 10; // How many features of each pattern
-    _featureScope = 21; // Features of pattern that every scope is start in 0
-    _targetItem   = 5;  // Target outputs of each pattern
-    _targetScope  = 10; // Scope of target outputs that start in 0
+    _patternItem    = 20; // Testing patterns
+    _featureItem    = 10; // How many features of each pattern
+    _featureScope   = 21; // Features of pattern that every scope is start in 0
+    
+    _targetItem     = 5;  // Target outputs of each pattern
+    _targetScope    = 10; // Scope of target outputs that start in 0
+    
+    _featureScaling = NO; // Does start feature scaling ? It it YES, the training patterns will ignore _featureScope & _targetScope.
 }
 
 -(NSArray <KRRBFPattern *> *)createTrainingPatterns
@@ -45,16 +51,31 @@
         // Setup that features of pattern
         for( NSInteger f=0; f<_featureItem; f++ )
         {
-            [p addFeature:( arc4random() % _featureScope )];
+            if( _featureScaling )
+            {
+                [p addFeature:[[KRMathLib sharedLib] randomDoubleMax:1.0f min:-1.0f]];
+            }
+            else
+            {
+                [p addFeature:( arc4random() % _featureScope )];
+            }
         }
         
         // Setup that target-outputs of pattern (多輸出)
         for( NSInteger t=0; t<_targetItem; t++ )
         {
-            [p addTarget:( arc4random() % _targetScope )];
+            if( _featureScaling )
+            {
+                [p addTarget:[[KRMathLib sharedLib] randomDoubleMax:1.0f min:0.0f]];
+            }
+            else
+            {
+                [p addTarget:( arc4random() % _targetScope )];
+            }
         }
         
-        //NSLog(@"p(%@).targets : %@", p.indexKey, p.targets);
+        //NSLog(@"train p(%@).features : %@", p.indexKey, p.features);
+        NSLog(@"train p(%@).targets : %@", p.indexKey, p.targets);
         [patterns addObject:p];
     }
     return patterns;
@@ -70,9 +91,16 @@
         p.indexKey      = @(i);
         for( NSInteger f=0; f<_featureItem; f++ )
         {
-            [p addFeature:( arc4random() % _featureScope )];
+            if( _featureScaling )
+            {
+                [p addFeature:[[KRMathLib sharedLib] randomDoubleMax:1.0f min:-1.0f]];
+            }
+            else
+            {
+                [p addFeature:( arc4random() % _featureScope )];
+            }
         }
-        //NSLog(@"p(%@).features : %@", p.indexKey, p.features);
+        //NSLog(@"verify p(%@).features : %@", p.indexKey, p.features);
         [_verifications addObject:p];
     }
     return _verifications;
@@ -91,11 +119,11 @@
         if( rmse > 0.1f )
         {
             // Save that trained parameters of network.
-            [rbfnn saveForKey:@"RBFNN_1"];
+            [rbfnn saveForKey:@"RBFNN_OLS"];
             // Reset all trained information to prepare next retrain.
             [rbfnn reset];
             // Recover from saved network for key.
-            [rbfnn recoverForKey:@"RBFNN_1"];
+            [rbfnn recoverForKey:@"RBFNN_OLS"];
             
             __strong typeof(self) _strongSelf = _weakSelf;
             // Predicating by trained network.
@@ -124,9 +152,9 @@
         NSLog(@"rmse : %f", rmse);
         if( rmse > 0.1f )
         {
-            [rbfnn saveForKey:@"RBFNN_2"];
+            [rbfnn saveForKey:@"RBFNN_Random"];
             [rbfnn reset];
-            [rbfnn recoverForKey:@"RBFNN_2"];
+            [rbfnn recoverForKey:@"RBFNN_Random"];
             
             __strong typeof(self) _strongSelf = _weakSelf;
             // Predicating by trained network.
@@ -144,18 +172,33 @@
 
 -(void)testSGA
 {
+    __weak typeof(self) _weakSelf = self;
+    
     KRRBFNN *network = [[KRRBFNN alloc] init];
     [network addPatterns:[self createTrainingPatterns]];
-    [network pickCentersByRandomWithLimitCount:5];
-    [network randomWeightsBetweenMin:0.0 max:0.5];
+    //[network pickCentersByOLSWithTolerance:1.0f]; // To use OLS
+    [network pickCentersByRandomWithLimitCount:5];  // To use Random picking
+    [network randomWeightsBetweenMin:0.0 max:0.25];
     
     network.learningRate   = 0.8f;
     network.toleranceError = 0.001f;
-    network.maxIteration   = 100;
+    network.maxIteration   = 1000;
     
     [network trainSGAWithCompletion:^(BOOL success, KRRBFNN *rbfnn) {
+        NSLog(@"Done in %li the RMSE %f", rbfnn.iterationTimes, rbfnn.rmse);
         
-    } iteration:^BOOL(NSInteger iteration, double rmse, NSArray<KRRBFCenterNet *> *centers, NSArray<KRRBFOutputNet *> *weights, double sigma) {
+        [rbfnn saveForKey:@"RBFNN_SGA"];
+        [rbfnn reset];
+        [rbfnn recoverForKey:@"RBFNN_SGA"];
+        
+        __strong typeof(self) _strongSelf = _weakSelf;
+        // Predicating by trained network.
+        [rbfnn predicateWithPatterns:[_strongSelf createVerificationPatterns] output:^(NSDictionary<NSString *,NSArray<NSNumber *> *> *outputs) {
+            NSLog(@"predicated outputs : %@", outputs);
+        }];
+    } iteration:^BOOL(NSInteger iteration, double rmse) {
+        NSLog(@"Iteration %li the RMSE %f", iteration, rmse);
+        // YES means we allow to continue next iteration, NO means don't do next iteration (immediately stop).
         return YES;
     }];
 }
@@ -163,8 +206,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupParameters];
-    //[self testOLS];
-    //[self testRandom];
+    [self testOLS];
+    [self testRandom];
     [self testSGA];
 }
 

@@ -15,14 +15,14 @@
 
 @end
 
-@interface KRMathLib (fixNumber)
+@interface KRMathLib (RandomNumber)
 
 -(NSInteger)randomIntegerMax:(NSInteger)_maxValue min:(NSInteger)_minValue;
 -(double)randomDoubleMax:(double)_maxValue min:(double)_minValue;
 
 @end
 
-@interface KRMathLib (fixArray)
+@interface KRMathLib (ArrayOperations)
 
 -(NSArray *)sortArray:(NSArray *)_array byKey:(NSString *)_byKey ascending:(BOOL)_ascending;
 
@@ -38,8 +38,15 @@
 
 @end
 
-@interface KRMathLib (fixEquations)
+@interface KRMathLib (SolveEquations)
 
 -(NSMutableArray <NSNumber *> *)solveEquationsAtMatrix:(NSArray *)_matrix outputs:(NSArray *)_outputs;
+
+@end
+
+@interface KRMathLib (Distance)
+
+-(double)distance:(NSArray *)_x1 x2:(NSArray *)_x2; // It's euclidean without sqrt(), the formula is ||x1 - x2||^2
+-(double)euclidean:(NSArray *)_x1 x2:(NSArray *)_x2;
 
 @end

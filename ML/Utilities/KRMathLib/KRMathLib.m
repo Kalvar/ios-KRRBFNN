@@ -31,7 +31,7 @@
 
 @end
 
-@implementation KRMathLib (fixNumber)
+@implementation KRMathLib (RandomNumber)
 
 -(NSInteger)randomIntegerMax:(NSInteger)_maxValue min:(NSInteger)_minValue
 {
@@ -60,7 +60,7 @@
 
 @end
 
-@implementation KRMathLib (fixArray)
+@implementation KRMathLib (ArrayOperations)
 
 -(NSArray *)sortArray:(NSArray *)_array byKey:(NSString *)_byKey ascending:(BOOL)_ascending
 {
@@ -204,7 +204,7 @@
 
 @end
 
-@implementation KRMathLib (fixEquations)
+@implementation KRMathLib (SolveEquations)
 // 使用最小平方法(LMS)來求方陣解聯立
 // Solves that simultaneous equations
 -(NSMutableArray <NSNumber *> *)solveEquationsAtMatrix:(NSArray *)_matrix outputs:(NSArray *)_outputs
@@ -273,6 +273,28 @@
         
     }
     return _solvedEquations;
+}
+
+@end
+
+@implementation KRMathLib (Distance)
+
+-(double)distance:(NSArray *)_x1 x2:(NSArray *)_x2
+{
+    NSInteger _index = 0;
+    double _sum      = 0.0f;
+    for( NSNumber *_x in _x1 )
+    {
+        _sum        += powf([_x doubleValue] - [[_x2 objectAtIndex:_index] doubleValue], 2);
+        ++_index;
+    }
+    return _sum;
+}
+
+-(double)euclidean:(NSArray *)_x1 x2:(NSArray *)_x2
+{
+    double _sum = [self distance:_x1 x2:_x2];
+    return (_sum > 0.0f) ? sqrtf(_sum) : _sum;
 }
 
 @end

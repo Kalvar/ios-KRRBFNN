@@ -12,29 +12,6 @@
 #import "KRRBFFetcher.h"
 #import "KRMathLib.h"
 
-/*
- # 有幾個實作想法 :
-     1. 把 2 個權重修正方法分開寫 :
-     - a). 寫一支 class 用「最小平方法 (LMS)」求權重
-     - b). 再寫一支 class 用 SGA 來修正權重
-     2. 有幾種用法 :
-     - a). OLS 選中心點 -> 用 LMS 解聯立直接求出權重結果 -> 再用 SGA 來做更深層的後續修正，以提昇精度
-     - b). OLS 選中心點 -> 亂數給權重 (-0.25 ~ 0.25) -> 再用 SGA 來做修正
-     - c). Random 選中心點 -> 用 LMS 解聯立直接求出權重結果 -> 再用 SGA 來做後續修正提昇精度
-     - d). Random 選中心點 -> 亂數給權重 (-0.25 ~ 0.25) -> 再用 SGA 來做修正
- 
-     05/04/2016 已決定以 a ~ d 的方法來實作。
- 
- # RBFNN 使用方法 :
-     - Recall weights (實作儲存訓練好的 weights，和回復訓練好的 weights)
-     - Recall centers (實作儲存訓練好/挑好的 centers，和回復訓練好的 centers)
-     - 原來有幾個特徵值與輸出，就要用回幾個特徵值與輸出 (跟一般的 NN 一樣)，否則就要重新訓練網路
- 
- # RBFNN that training is 2 steps :
-     - 1. To choose initial centers
-     - 2. To calculate weights
- */
-
 @interface KRRBFNN ()
 
 // Center choice methods
@@ -46,7 +23,6 @@
 @property (nonatomic, strong) KRRBFSGA *sga;
 
 @property (nonatomic, strong) KRRBFFetcher *fetcher;
-@property (nonatomic, assign) NSInteger iterationTimes; // Current iteration times.
 
 @end
 
@@ -94,34 +70,41 @@
     }
     
     self.iterationTimes += 1;
-    
     __weak typeof(self) _weakSelf = self;
     [self.outputLayer outputWithPatterns:self.patterns centers:self.centers completion:^(KRRBFOutputLayer *layer) {
         
         __strong typeof(self) _strongSelf = _weakSelf;
-        
-        NSLog(@"here %li", _strongSelf.iterationTimes);
-        
-#warning TODO: 還沒完成整個邏輯，先把 sga update 的部份寫完，再來補這裡的邏輯
-        
         // 如果已達收斂條件，就不再進行迭代運算 (returns NO 會接著解發 completion block)
         if( _strongSelf.iterationTimes >= _strongSelf.maxIteration || layer.rmse <= _strongSelf.toleranceError )
         {
             if( _completion )
             {
-                // ...
+                _completion(YES, self);
             }
             [_strongSelf.sga freeReferences];
             return;
         }
+        else if( _iteration )
+        {
+            BOOL _isContinue = _iteration(_strongSelf.iterationTimes, layer.rmse);
+            if( !_isContinue )
+            {
+                if( _completion )
+                {
+                    _completion(NO, self);
+                }
+                [_strongSelf.sga freeReferences];
+                return;
+            }
+        }
         
-        // 遞迴跑下一迭代
+        // 繼續遞迴跑下一迭代
         [_strongSelf _sgaWithCompletion:_completion iteration:_iteration];
         
-    } patternOutput:^(NSArray<KRRBFOutputNet *> *patternOutputs, double costError, KRRBFPattern *currentPattern) {
+    } patternOutput:^(NSArray<KRRBFOutputNet *> *patternOutputs, KRRBFPattern *currentPattern) {
         __strong typeof(self) _strongSelf = _weakSelf;
         // Below updating methods are used reference memory to automatic update outside values.
-        [_strongSelf.sga updateCentersWithCurrentPattern:currentPattern];
+        [_strongSelf.sga updateCentersWithPattern:currentPattern];
         [_strongSelf.sga updateWeights];
     }];
 }
@@ -313,7 +296,7 @@
         {
             _completion(YES, self);
         }
-    } patternOutput:^(NSArray<KRRBFOutputNet *> *patternOutputs, double costError, KRRBFPattern *currentPattern) {
+    } patternOutput:^(NSArray<KRRBFOutputNet *> *patternOutputs, KRRBFPattern *currentPattern) {
         if( _patternOutput )
         {
             _patternOutput(patternOutputs);
@@ -424,12 +407,12 @@
     return 0.0f;
 }
 
-/*
+//*
 -(void)dealloc
 {
     // Since tested experience, here objects are correctly dealloced.
     NSLog(@"KRRBFNN is dealloced");
 }
- */
+ //*/
 
 @end

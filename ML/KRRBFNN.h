@@ -25,7 +25,7 @@
 
 typedef void(^KRRBFNNCompletion)(BOOL success, KRRBFNN *rbfnn);
 typedef void(^KRRBFNNPatternOutput)(NSArray <KRRBFOutputNet *> *patternOutputs);
-typedef BOOL(^KRRBFNNIteration)(NSInteger iteration, double rmse, NSArray <KRRBFCenterNet *> *centers, NSArray <KRRBFOutputNet *> *weights, double sigma); // Returns NO that means immediately stop iteration calculation.
+typedef BOOL(^KRRBFNNIteration)(NSInteger iteration, double rmse); // Returns NO that means immediately stop iteration.
 typedef void(^KRRBFNNPredication)(NSDictionary <NSString *, NSArray <NSNumber *> *> *outputs);
 
 @interface KRRBFNN : NSObject
@@ -40,7 +40,8 @@ typedef void(^KRRBFNNPredication)(NSDictionary <NSString *, NSArray <NSNumber *>
 @property (nonatomic, strong) KRRBFOutputLayer *outputLayer;
 
 @property (nonatomic, readonly) double rmse;              // Current network RMSE.
-//@property (nonatomic, readonly) NSArray *sigmas;          // Current centers of network that sigma values, if we used SGA to learn that weights of network, centers are own their specific sigma value, it means 1 center has 1 sigma.
+//@property (nonatomic, readonly) NSArray *sigmas;        // Current centers of network that sigma values, if we used SGA to learn that weights of network, centers are own their specific sigma value, it means 1 center has 1 sigma.
+@property (nonatomic, assign) NSInteger iterationTimes;   // Current iteration times.
 @property (nonatomic, assign) NSInteger maxIteration;     // Max iteration to limit network training times.
 @property (nonatomic, assign) double toleranceError;      // Tolerance error of RMSE value to use on SGA judges when to stop.
 @property (nonatomic, assign) double learningRate;        // Learning rate for SGA.
