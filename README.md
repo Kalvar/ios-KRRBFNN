@@ -1,6 +1,6 @@
 ## About
 
-KRRBFNN is implemented Radial basis function network of machine learning.
+KRRBFNN is a Radial basis function network used Guassian function in machine learning, it implemented OLS, LMS, SGA, Random algorithms.
 
 #### Podfile
 

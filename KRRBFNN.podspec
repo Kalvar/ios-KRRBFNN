@@ -1,9 +1,9 @@
 Pod::Spec.new do |s|
   s.name         = "KRRBFNN"
-  s.version      = "1.0.0"
+  s.version      = "1.1.0"
   s.summary      = "KRRBFNN is implemented Radial basis function network of machine learning."
   s.description  = <<-DESC
-                   KRRBFNN is a Radial basis function network used Guassian function currently, implemented OLS, LMS, SGA, Random.
+                   KRRBFNN is a Radial basis function network used Guassian function, implemented OLS, LMS, SGA, Random algorithms.
                    DESC
   s.homepage     = "https://github.com/Kalvar/ios-KRRBFNN"
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
