@@ -8,12 +8,6 @@
 
 #import "KRRBFNet.h"
 
-@interface KRRBFNet ()
-
-//@property (nonatomic, weak) NSCoder *coder;
-
-@end
-
 @implementation KRRBFNet (NSCoding)
 
 -(void)encodeObject:(id)_object forKey:(NSString *)_key

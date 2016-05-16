@@ -10,6 +10,8 @@
 #import "KRRBFTarget.h"
 #import "KRRBFOutputLayer.h"
 #import "KRRBFFetcher.h"
+#import "KRRBFHiddenLayer.h"
+#import "KRRBFOutputLayer.h"
 #import "KRMathLib.h"
 
 @interface KRRBFNN ()
@@ -23,6 +25,9 @@
 @property (nonatomic, strong) KRRBFSGA *sga;
 
 @property (nonatomic, strong) KRRBFFetcher *fetcher;
+
+@property (nonatomic, strong) KRRBFHiddenLayer *hiddenLayer;
+@property (nonatomic, strong) KRRBFOutputLayer *outputLayer;
 
 @end
 

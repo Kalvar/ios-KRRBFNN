@@ -8,9 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import "KRRBFHiddenLayer.h"
-#import "KRRBFOutputLayer.h"
-
 #import "KRRBFPattern.h"
 #import "KRRBFCenterNet.h"
 #import "KRRBFOutputNet.h"
@@ -35,9 +32,6 @@ typedef void(^KRRBFNNPredication)(NSDictionary <NSString *, NSArray <NSNumber *>
 
 @property (nonatomic, readonly) NSMutableArray <KRRBFCenterNet *> *centers;
 @property (nonatomic, readonly) NSMutableArray <KRRBFOutputNet *> *weights; // Network weights are included in "KROutputLayer.nets".
-
-@property (nonatomic, strong) KRRBFHiddenLayer *hiddenLayer;
-@property (nonatomic, strong) KRRBFOutputLayer *outputLayer;
 
 @property (nonatomic, readonly) double rmse;              // Current network RMSE.
 //@property (nonatomic, readonly) NSArray *sigmas;        // Current centers of network that sigma values, if we used SGA to learn that weights of network, centers are own their specific sigma value, it means 1 center has 1 sigma.

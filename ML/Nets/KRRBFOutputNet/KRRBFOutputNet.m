@@ -62,6 +62,7 @@
 #pragma --mark Getters
 -(double)outputError
 {
+    // That updating weights, centers, sigmas are using here, not costError.
     return _targetValue - _outputValue;
 }
 
