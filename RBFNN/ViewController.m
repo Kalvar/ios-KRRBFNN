@@ -6,6 +6,23 @@
 //  Copyright © 2015年 Kalvar Lin. All rights reserved.
 //
 
+/*
+ # 有幾種用法 :
+     - a). OLS 選中心點 -> 用 LMS 解聯立直接求出權重結果 -> 再用 SGA 來做更深層的後續修正，以提昇精度
+     - b). OLS 選中心點 -> 亂數給權重 (-0.25 ~ 0.25) -> 再用 SGA 來做修正
+     - c). Random 選中心點 -> 用 LMS 解聯立直接求出權重結果 -> 再用 SGA 來做後續修正提昇精度
+     - d). Random 選中心點 -> 亂數給權重 (-0.25 ~ 0.25) -> 再用 SGA 來做修正
+ 
+ # RBFNN 使用方法 :
+     - Recall weights (實作儲存訓練好的 weights，和回復訓練好的 weights)
+     - Recall centers (實作儲存訓練好/挑好的 centers，和回復訓練好的 centers)
+     - 原來有幾個特徵值與輸出，就要用回幾個特徵值與輸出 (跟一般的 NN 一樣)，否則就要重新訓練網路
+ 
+ # RBFNN that training is 2 steps :
+     - 1. To choose initial centers
+     - 2. To calculate weights
+ */
+
 #import "ViewController.h"
 #import "KRRBFNN.h"
 #import "KRMathLib.h"
@@ -27,7 +44,7 @@
 #pragma --mark Examples
 -(void)setupParameters
 {
-    _patternItem    = 20; // Testing patterns
+    _patternItem    = 50; // Testing patterns
     _featureItem    = 10; // How many features of each pattern
     _featureScope   = 21; // Features of pattern that every scope is start in 0
     

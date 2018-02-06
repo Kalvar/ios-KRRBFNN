@@ -172,7 +172,7 @@
     // 再想想這裡的流程要怎麼重新設計，參考書本 P.185
     NSMutableArray *_ss      = [NSMutableArray new];
     [_ss addObject:[_centerRBFDistances objectAtIndex:_maxErrIndex]];
-    double _sumError         = _maxErrValue;
+    double _sumError         = _maxErrValue; // sumError 是最大誤差下降率 (並非誤差值)
     [_trainSamples removeObjectAtIndex:_maxErrIndex];
     [_centerRBFDistances removeObjectAtIndex:_maxErrIndex];
     [_errors removeAllObjects];
@@ -181,7 +181,7 @@
     // Alphaik = (Si x Uk) / (Si x Si)
     // Sk = Uk - Sum(Alphaik x Si), for Sum scope is i=1 ... to k-1
     NSInteger _patternCount = [_trainSamples count];
-    // 如果正確率還不到收斂範圍 && 還沒有 Loop 完所有剩餘的 Patterns
+    // 如果正確率還不到收斂範圍 (即最大誤差下降率還不到目標下降率: _tolerance) && 還沒有 Loop 完所有剩餘的 Patterns
     while( _sumError<_tolerance && _k<_patternCount )
     {
         // 或是取到限定的 Centers 數量就停止，_k+1 是因為 _k 從零開始且一開始就有先選擇了 1 個中心點

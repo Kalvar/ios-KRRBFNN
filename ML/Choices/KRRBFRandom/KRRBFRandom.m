@@ -86,7 +86,7 @@
         _cacheRandoms = [self randomAlgorithm:_patterns];
     }
     
-    NSMutableArray *_picks = [NSMutableArray new];
+    NSMutableArray <KRRBFCenterNet *> *_picks = [NSMutableArray new];
     for( NSInteger _j=0; _j<_pickNumber; _j++ )
     {
         KRRBFCenterNet *_centerNet = [[KRRBFCenterNet alloc] initWithFeatures:[_cacheRandoms objectAtIndex:_j].features];

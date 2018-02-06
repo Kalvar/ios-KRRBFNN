@@ -41,7 +41,7 @@
 -(double)_calculateCommonSigmaWithCenters:(NSArray <KRRBFCenterNet *> *)_centers
 {
     double _maxDistance = [self _calculateMaxDistanceWithCenters:_centers];
-    return (_maxDistance >= 0.0f) ? _maxDistance / sqrt([_centers count]) : 0.0f;
+    return (_maxDistance > 0.0f) ? _maxDistance / sqrt([_centers count]) : 1.0f;
 }
 
 @end
@@ -193,7 +193,7 @@
 
 -(void)dealloc
 {
-    NSLog(@"KRRBFOutputLayer is dealloced");
+    //NSLog(@"KRRBFOutputLayer is dealloced");
 }
 
 @end

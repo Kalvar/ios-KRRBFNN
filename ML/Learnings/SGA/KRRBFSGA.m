@@ -96,14 +96,16 @@
         NSArray *_minusFeatures  = [_mathLib minusMatrix:_currentPattern.features anotherMatrix:_centerNet.features]; // ( x(p) - cj(p) )
         NSArray *_deltaCenters   = [_mathLib multiplyMatrix:_minusFeatures byNumber:_deltaCenterValue];
         NSArray *_newCenters     = [_mathLib plusMatrix:_centerNet.features anotherMatrix:_deltaCenters];
-        [_centerNet addFeaturesFromArray:_newCenters];
         
         // sigma error = ( error1 * weight11 + error2 * weight12 + ... + errorN * weights1N ) / ( sigma * sigma * sigma )
-        // distance    = ||x(p) - cj(p)||^2 that means euclidean without sqrt().
+        // distance    = ||x(p) - cj(p)||^2 that means euclidean without sqrt(), the cj(p) is current old features of center (not updated).
         double _distance   = [_mathLib distance:_currentPattern.features x2:_centerNet.features];
         double _deltaSigma = _sigmaLearningRate * ( _sumCost / pow(_centerNet.sigma, 3) ) * _centerNet.rbfValue * _distance;
         double _newSigma   = _centerNet.sigma + _deltaSigma;
         _centerNet.sigma   = _newSigma;
+        
+        // Updating Centers
+        [_centerNet addFeaturesFromArray:_newCenters];
     }
 }
 
@@ -150,7 +152,7 @@
 
 -(void)dealloc
 {
-    NSLog(@"KRRBFSGA is dealloced");
+    //NSLog(@"KRRBFSGA is dealloced");
 }
 
 @end
